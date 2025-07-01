@@ -63,6 +63,8 @@ jobs:
           else
             echo "No changelog changes detected, skipping commit"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
