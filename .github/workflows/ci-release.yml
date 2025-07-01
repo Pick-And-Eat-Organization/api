@@ -59,7 +59,7 @@ jobs:
           if ! git diff --quiet CHANGELOG.md; then
             git add CHANGELOG.md
             git commit -m "docs(changelog): update for release v${{ steps.version.outputs.version }}"
-            git push
+            git push --set-upstream origin release/v${{ steps.version.outputs.version }}
           else
             echo "No changelog changes detected, skipping commit"
           fi
