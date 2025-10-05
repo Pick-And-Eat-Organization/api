@@ -1,4 +1,4 @@
-package com.clickandeat.authentication.application.exceptions.technical;
+package com.clickandeat.shared.exceptions;
 
 public abstract class AbstractTechnicalException extends RuntimeException {
   private final String component;

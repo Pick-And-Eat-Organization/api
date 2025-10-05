@@ -66,10 +66,7 @@ public class AccountUnitTest {
 
   @Test
   public void testAccountBirthDate_shouldGetAge() throws ParseException {
-    int expectedAge = Period.between(
-            LocalDate.parse("1995-09-04"),
-            LocalDate.now()
-    ).getYears();
+    int expectedAge = Period.between(LocalDate.parse("1995-09-04"), LocalDate.now()).getYears();
 
     assertEquals(expectedAge, consumerAccount.getAccountBirthDate().getAge());
   }

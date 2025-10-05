@@ -1,4 +1,4 @@
-package com.clickandeat.authentication.application.exceptions.application;
+package com.clickandeat.shared.exceptions;
 
 public class AbstractApplicationException extends RuntimeException {
   private final String key;

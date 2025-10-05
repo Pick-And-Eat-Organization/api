@@ -1,5 +1,7 @@
 package com.clickandeat.authentication.application.exceptions.application;
 
+import com.clickandeat.shared.exceptions.AbstractApplicationException;
+
 public class EmailAlreadyUsedException extends AbstractApplicationException {
 
   public EmailAlreadyUsedException() {

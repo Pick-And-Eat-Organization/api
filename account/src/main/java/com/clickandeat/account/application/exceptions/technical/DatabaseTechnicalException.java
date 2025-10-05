@@ -1,4 +1,4 @@
-package com.clickandeat.authentication.application.exceptions.technical;
+package com.clickandeat.account.application.exceptions.technical;
 
 import com.clickandeat.shared.exceptions.AbstractTechnicalException;
 
