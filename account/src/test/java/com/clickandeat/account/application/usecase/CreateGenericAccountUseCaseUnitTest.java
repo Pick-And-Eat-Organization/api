@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 
 import com.clickandeat.account.application.exceptions.application.ExistingAccountForCredentialsIdException;
 import com.clickandeat.account.application.exceptions.application.PhoneNumberAlreadyUsedException;
+import com.clickandeat.account.application.service.AccountCreationService;
 import com.clickandeat.account.application.usecase.command.CreateGenericAccountCommand;
 import com.clickandeat.account.application.usecase.create_generic_account.CreateGenericAccountUseCase;
 import com.clickandeat.account.domain.account.Account;
@@ -23,12 +24,13 @@ import org.mockito.Mockito;
 @Tag("unit")
 public class CreateGenericAccountUseCaseUnitTest {
   private CreateGenericAccountUseCase createGenericProfilUseCase;
-  private IAccountRepository accountRepository;
+    private IAccountRepository accountRepository;
 
   @BeforeEach
   public void setUp() {
     this.accountRepository = Mockito.mock(IAccountRepository.class);
-    this.createGenericProfilUseCase = new CreateGenericAccountUseCase(accountRepository);
+      AccountCreationService accountCreationService = new AccountCreationService(this.accountRepository);
+    this.createGenericProfilUseCase = new CreateGenericAccountUseCase(accountCreationService);
   }
 
   @Test
@@ -75,7 +77,6 @@ public class CreateGenericAccountUseCaseUnitTest {
             Date.from(Instant.parse("2024-01-01T00:00:00Z")),
             null,
             null);
-    Account savedAccount = Mockito.mock(Account.class);
     when(this.accountRepository.isCredentialsIdUnique(credentialsId)).thenReturn(true);
     when(this.accountRepository.isPhoneNumberUnique(command.accountPhoneNumber())).thenReturn(true);
     when(accountRepository.saveAccount(any(Account.class), eq(credentialsId)))
