@@ -15,9 +15,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @Table(
     name = "account",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"phoneNumber"})},
-    indexes = {@Index(name = "idx_account_phoneNumber", columnList = "phoneNumber")})
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"phone_number"})},
+    indexes = {@Index(name = "idx_account_phone_number", columnList = "phone_number")})
 @Entity()
+@EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 public class AccountEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,19 +28,19 @@ public class AccountEntity {
   @Column(name = "credentials_id", nullable = false, updatable = false)
   private UUID credentialsId;
 
-  @Column(name = "firstName", updatable = true, nullable = false)
+  @Column(name = "first_name", updatable = true, nullable = false)
   private String firstName;
 
-  @Column(name = "lastName", updatable = true, nullable = false)
+  @Column(name = "last_name", updatable = true, nullable = false)
   private String lastName;
 
-  @Column(name = "birth_date", updatable = true, nullable = false)
+  @Column(name = "birth_date", updatable = true, nullable = true)
   private LocalDate birthDate;
 
   @Column(name = "phone_number", updatable = true, nullable = false)
   private String phoneNumber;
 
-  @Column(name = "created_at", updatable = false, nullable = false)
+  @Column(name = "created_at", updatable = false, nullable = true)
   @CreatedDate
   private Instant createdAt;
 

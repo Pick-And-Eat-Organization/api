@@ -14,8 +14,7 @@ public class Account {
   private final AccountBirthDate accountBirthDate;
   private final Date accountCreatedDate;
   private final Date accountUpdatedDate;
-  private final AccountProInformations
-      accountProInformations;
+  private final AccountProInformations accountProInformations;
 
   public Account(
       Long id,
@@ -88,9 +87,7 @@ public class Account {
     return accountUpdatedDate;
   }
 
-  public AccountProInformations
-      getAccountProInformations() {
+  public AccountProInformations getAccountProInformations() {
     return accountProInformations;
   }
-
 }

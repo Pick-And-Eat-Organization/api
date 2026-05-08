@@ -48,8 +48,8 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 
         val projectMode = props.getProperty("PROJECT_MODE") ?: "prod"
 
-        if (projectMode == "dev") {
-            println("PROJECT_MODE=dev detected, injecting .env variables...")
+        if (projectMode == "dev" || projectMode == "development") {
+            println("PROJECT_MODE=$projectMode detected, injecting .env variables...")
 
             props.forEach { key, value ->
                 environment(key.toString(), value.toString())

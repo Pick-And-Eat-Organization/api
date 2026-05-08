@@ -1,5 +1,6 @@
 package com.clickandeat.authentication.infrastructure.config.jwt;
 
+import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
@@ -7,13 +8,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableConfigurationProperties
 public class SecurityJwtConfig {
   private String secret;
-  private long accessExpirationMs;
+  private Duration accessExpirationMs;
 
   public String getSecret() {
     return secret;
   }
 
-  public long getAccessExpirationMs() {
+  public Duration getAccessExpirationMs() {
     return accessExpirationMs;
   }
 
@@ -21,7 +22,7 @@ public class SecurityJwtConfig {
     this.secret = secret;
   }
 
-  public void setAccessExpirationMs(long accessExpirationMs) {
+  public void setAccessExpirationMs(Duration accessExpirationMs) {
     this.accessExpirationMs = accessExpirationMs;
   }
 }

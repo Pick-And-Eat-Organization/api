@@ -2,7 +2,6 @@ package com.clickandeat.account.infrastructure.model;
 
 import com.clickandeat.account.domain.account.pro.AccountProInformations;
 import jakarta.persistence.*;
-import java.util.UUID;
 
 @Entity()
 @Table(
@@ -13,7 +12,7 @@ public class AccountProInformationsEntity {
   @Column(name = "account_id", updatable = false, nullable = false)
   private Long id;
 
-  @OneToOne
+  @OneToOne(optional = false)
   @MapsId
   @JoinColumn(name = "account_id")
   private AccountEntity account;
@@ -33,19 +32,19 @@ public class AccountProInformationsEntity {
   @Column(name = "address3", updatable = true, nullable = true)
   private String address3;
 
-  @Column(name = "city", updatable = true, nullable = true)
+  @Column(name = "city", updatable = true, nullable = false)
   private String city;
 
-  @Column(name = "cp", updatable = true, nullable = true)
+  @Column(name = "cp", updatable = true, nullable = false)
   private String cp;
 
-  @Column(name = "country", updatable = true, nullable = true)
+  @Column(name = "country", updatable = true, nullable = false)
   private String country;
 
-  @Column(name = "legal_form", updatable = true, nullable = true)
+  @Column(name = "legal_form", updatable = true, nullable = false)
   private String legalForm;
 
-  @Column(name = "legal_name", updatable = true, nullable = true)
+  @Column(name = "legal_name", updatable = true, nullable = false)
   private String legalName;
 
   public AccountProInformationsEntity(
@@ -98,8 +97,7 @@ public class AccountProInformationsEntity {
 
   public static AccountProInformationsEntity fromDomain(
       AccountProInformations accountProInformations,
-      AccountEntity accountEntity,
-      UUID credentialsId) {
+      AccountEntity accountEntity) {
     return new AccountProInformationsEntity(
         null,
         accountEntity,

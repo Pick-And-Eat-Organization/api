@@ -14,14 +14,14 @@ public class TokenProviderUnitTest {
 
   private static final String SECRET =
       "YmFzZTY0ZW5jb2RlZHNlY3JldGtleUhlcmVXaXRoMzJieXRlcw=="; // base64 32-byte key
-  private static final long ACCESS_EXPIRATION_MS = 3600;
+  private static final Duration ACCESS_EXPIRATION = Duration.ofMillis(3600);
 
   private TokenProvider tokenProvider;
   private TokenPayload testPayload;
 
   @BeforeEach
   void setUp() {
-    tokenProvider = new TokenProvider(SECRET, ACCESS_EXPIRATION_MS);
+    tokenProvider = new TokenProvider(SECRET, ACCESS_EXPIRATION);
     testPayload = new TokenPayload(UUID.randomUUID(), "USER");
   }
 
@@ -73,7 +73,7 @@ public class TokenProviderUnitTest {
 
   @Test
   void validate_shouldReturnFalseForExpiredToken() {
-    TokenProvider shortLivedProvider = new TokenProvider(SECRET, 1); // expires in 1 second
+    TokenProvider shortLivedProvider = new TokenProvider(SECRET, Duration.ofSeconds(1));
     String token = shortLivedProvider.generateAccessToken(testPayload);
 
     try {

@@ -19,5 +19,4 @@ public class CreateGenericAccountUseCase {
     Account savedAccount = this.accountCreationService.createAccount(command);
     return savedAccount.getId();
   }
-
 }

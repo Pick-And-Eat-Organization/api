@@ -24,12 +24,13 @@ import org.mockito.Mockito;
 @Tag("unit")
 public class CreateGenericAccountUseCaseUnitTest {
   private CreateGenericAccountUseCase createGenericProfilUseCase;
-    private IAccountRepository accountRepository;
+  private IAccountRepository accountRepository;
 
   @BeforeEach
   public void setUp() {
     this.accountRepository = Mockito.mock(IAccountRepository.class);
-      AccountCreationService accountCreationService = new AccountCreationService(this.accountRepository);
+    AccountCreationService accountCreationService =
+        new AccountCreationService(this.accountRepository);
     this.createGenericProfilUseCase = new CreateGenericAccountUseCase(accountCreationService);
   }
 
