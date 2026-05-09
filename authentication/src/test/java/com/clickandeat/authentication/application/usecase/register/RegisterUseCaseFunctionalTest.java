@@ -48,6 +48,12 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
             "select count(*) from account where credentials_id = ?", Integer.class, result);
     assertNotNull(count);
     assertEquals(1, count);
+    String phoneNumber =
+        jdbcTemplate.queryForObject(
+            "select phone_number from credentials where credentials_id = ?",
+            String.class,
+            result);
+    assertEquals(command.phoneNumber(), phoneNumber);
   }
 
   @Test

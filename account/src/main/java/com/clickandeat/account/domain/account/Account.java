@@ -9,7 +9,6 @@ public class Account {
   private String lastName;
   private String firstName;
   private final RoleName role;
-  private AccountPhoneNumber accountPhoneNumber;
   private final String accountEmail;
   private final AccountBirthDate accountBirthDate;
   private final Date accountCreatedDate;
@@ -21,7 +20,6 @@ public class Account {
       String lastName,
       String firstName,
       RoleName role,
-      String accountPhoneNumber,
       String accountEmail,
       String accountBirthDate,
       Date accountCreatedDate,
@@ -31,7 +29,6 @@ public class Account {
     this.lastName = lastName;
     this.firstName = firstName;
     this.role = role;
-    this.accountPhoneNumber = new AccountPhoneNumber(accountPhoneNumber);
     this.accountEmail = accountEmail;
     this.accountBirthDate = new AccountBirthDate(accountBirthDate);
     this.accountCreatedDate = accountCreatedDate;
@@ -61,14 +58,6 @@ public class Account {
 
   public RoleName getRole() {
     return role;
-  }
-
-  public AccountPhoneNumber getAccountPhoneNumber() {
-    return accountPhoneNumber;
-  }
-
-  public void setAccountPhoneNumber(AccountPhoneNumber accountPhoneNumber) {
-    this.accountPhoneNumber = accountPhoneNumber;
   }
 
   public AccountBirthDate getAccountBirthDate() {

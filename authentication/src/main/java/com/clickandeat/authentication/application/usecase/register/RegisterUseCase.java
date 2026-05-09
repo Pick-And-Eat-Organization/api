@@ -94,7 +94,14 @@ public class RegisterUseCase implements IRegisterUseCase {
   }
 
   private Credentials createCredentials(RegisterCommand command, String hashedPassword) {
-    return new Credentials(null, command.email(), hashedPassword, command.role(), new Date(), null);
+    return new Credentials(
+        null,
+        command.email(),
+        command.phoneNumber(),
+        hashedPassword,
+        command.role(),
+        new Date(),
+        null);
   }
 
   private UUID persistCredentials(Credentials credentials) {
@@ -112,7 +119,6 @@ public class RegisterUseCase implements IRegisterUseCase {
             command.firstName(),
             command.lastName(),
             command.role().name(),
-            command.phoneNumber(),
             command.birthDate());
     this.createGenericAccountPort.createGenericAccount(request);
   }

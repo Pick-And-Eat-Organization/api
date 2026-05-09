@@ -44,7 +44,6 @@ public class CreateProAccountUseCaseUnitTest {
         new CreateProAccountRequest(
             "John",
             "Doe",
-            "+33640404040",
             LocalDate.of(1995, 1, 1),
             "kbis",
             "12345678901234",
@@ -63,7 +62,6 @@ public class CreateProAccountUseCaseUnitTest {
             "Doe",
             "John",
             com.clickandeat.shared.enums.RoleName.PRO,
-            "+33640404040",
             null,
             "1995-01-01",
             Date.from(Instant.parse("2024-01-01T00:00:00Z")),
@@ -71,7 +69,6 @@ public class CreateProAccountUseCaseUnitTest {
             null);
 
     when(this.accountRepository.isCredentialsIdUnique(credentialsId)).thenReturn(true);
-    when(this.accountRepository.isPhoneNumberUnique(request.accountPhoneNumber())).thenReturn(true);
     when(this.accountRepository.saveAccount(any(Account.class), eq(credentialsId)))
         .thenReturn(persistedAccount);
     when(this.proAccountRepository.saveAccountProInformations(any(AccountProInformations.class)))

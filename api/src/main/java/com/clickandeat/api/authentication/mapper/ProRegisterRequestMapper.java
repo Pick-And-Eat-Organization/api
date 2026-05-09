@@ -24,7 +24,6 @@ public class ProRegisterRequestMapper {
     return new CreateProAccountRequest(
         dto.getFirstName(),
         dto.getLastName(),
-        dto.getPhoneNumber(),
         LocalDate.parse(dto.getBirthDate()),
         dto.getKbisRef(),
         dto.getSiret(),

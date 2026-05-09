@@ -33,7 +33,6 @@ public class AccountProInformationsUnitTest {
           "Doe",
           "John",
           RoleName.CONSUMER,
-          "+33650333125",
           "test@gmail.com",
           "1995-09-04",
           Date.from(Instant.now()),

@@ -10,7 +10,9 @@ import com.clickandeat.account.application.usecase.get_current_pro_account.GetCu
 import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.account.domain.account.pro.AccountProInformations;
 import com.clickandeat.account.domain.repository.IAccountRepository;
+import com.clickandeat.shared.account.CurrentCredentialsResponse;
 import com.clickandeat.shared.account.CurrentProAccountResponse;
+import com.clickandeat.shared.account.GetCurrentCredentialsPort;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.Instant;
 import java.util.Date;
@@ -23,7 +25,9 @@ class GetCurrentProAccountUseCaseUnitTest {
   @Test
   void shouldReturnCurrentProAccountResponse() {
     IAccountRepository accountRepository = mock(IAccountRepository.class);
-    GetCurrentProAccountUseCase useCase = new GetCurrentProAccountUseCase(accountRepository);
+    GetCurrentCredentialsPort credentialsPort = mock(GetCurrentCredentialsPort.class);
+    GetCurrentProAccountUseCase useCase =
+        new GetCurrentProAccountUseCase(accountRepository, credentialsPort);
     UUID credentialsId = UUID.randomUUID();
     Account account =
         new Account(
@@ -31,7 +35,6 @@ class GetCurrentProAccountUseCaseUnitTest {
             "Doe",
             "John",
             RoleName.PRO,
-            "+33601020304",
             null,
             "1995-01-01",
             Date.from(Instant.parse("2025-01-01T12:00:00Z")),
@@ -50,6 +53,8 @@ class GetCurrentProAccountUseCaseUnitTest {
                 "France"));
 
     when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.of(account));
+    when(credentialsPort.getCurrentCredentials(credentialsId))
+        .thenReturn(new CurrentCredentialsResponse("+33601020304"));
 
     CurrentProAccountResponse response = useCase.getCurrentProAccount(credentialsId);
 
@@ -64,7 +69,9 @@ class GetCurrentProAccountUseCaseUnitTest {
   @Test
   void shouldThrowWhenAccountDoesNotExist() {
     IAccountRepository accountRepository = mock(IAccountRepository.class);
-    GetCurrentProAccountUseCase useCase = new GetCurrentProAccountUseCase(accountRepository);
+    GetCurrentCredentialsPort credentialsPort = mock(GetCurrentCredentialsPort.class);
+    GetCurrentProAccountUseCase useCase =
+        new GetCurrentProAccountUseCase(accountRepository, credentialsPort);
     UUID credentialsId = UUID.randomUUID();
 
     when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.empty());

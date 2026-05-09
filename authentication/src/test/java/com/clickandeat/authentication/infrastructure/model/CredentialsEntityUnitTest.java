@@ -22,25 +22,29 @@ class CredentialsEntityUnitTest {
   void shouldConvertFromDomainToEntityAndBack() {
     UUID id = UUID.randomUUID();
     String email = "john@example.com";
+    String phoneNumber = "+33601020304";
     String password = "hashedPassword";
     Date createdAt = new Date();
     Date updatedAt = new Date();
     Set<Scope> scopes = Set.of(new Scope("READ", "PRODUCT"));
 
     Role role = new Role(RoleName.CONSUMER, scopes);
-    Credentials domain = new Credentials(id, email, password, role, createdAt, updatedAt);
+    Credentials domainWithPhone =
+        new Credentials(id, email, phoneNumber, password, role, createdAt, updatedAt);
     RoleEntity roleEntity = mock(RoleEntity.class);
     when(roleEntity.getId()).thenReturn(2);
     when(roleEntity.getName()).thenReturn("CONSUMER");
-    CredentialsEntity entity = CredentialsEntity.fromDomain(domain, roleEntity);
+    CredentialsEntity entity = CredentialsEntity.fromDomain(domainWithPhone, roleEntity);
     Credentials result = entity.toDomain();
 
-    assertEquals(domain.getId(), result.getId());
-    assertEquals(domain.getEmail(), result.getEmail());
-    assertEquals(domain.getPassword(), result.getPassword());
+    assertEquals(id, result.getId());
+    assertEquals(email, result.getEmail());
+    assertEquals(password, result.getPassword());
+    assertEquals(phoneNumber, result.getPhoneNumber());
     assertEquals(CredentialsStatus.ACTIVE, entity.getStatus());
     assertFalse(entity.isEmailVerified());
     assertFalse(entity.isPhoneVerified());
+    assertEquals(phoneNumber, entity.getPhoneNumber());
 
     assertEquals(RoleName.CONSUMER, result.getRole().name());
     assertEquals(CredentialsStatus.ACTIVE, result.getStatus());
@@ -54,20 +58,23 @@ class CredentialsEntityUnitTest {
     Date createdAt = new Date();
 
     Role role = new Role(RoleName.ADMIN, Set.of());
-    Credentials domain = new Credentials(id, email, password, role, createdAt, null);
+    Credentials domainWithPhone =
+        new Credentials(id, email, "+33601020305", password, role, createdAt, null);
 
     RoleEntity roleEntity = mock(RoleEntity.class);
     when(roleEntity.getId()).thenReturn(1);
     when(roleEntity.getName()).thenReturn("ADMIN");
 
-    CredentialsEntity entity = CredentialsEntity.fromDomain(domain, roleEntity);
+    CredentialsEntity entity = CredentialsEntity.fromDomain(domainWithPhone, roleEntity);
 
     assertNotNull(entity);
     assertNull(entity.getUpdatedAt());
     assertEquals(CredentialsStatus.ACTIVE, entity.getStatus());
+    assertEquals("+33601020305", entity.getPhoneNumber());
 
     Credentials result = entity.toDomain();
     assertNull(result.getUpdatedAt());
     assertEquals(CredentialsStatus.ACTIVE, result.getStatus());
+    assertEquals("+33601020305", result.getPhoneNumber());
   }
 }

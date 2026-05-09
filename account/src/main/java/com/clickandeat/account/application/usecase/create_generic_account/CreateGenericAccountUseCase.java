@@ -25,7 +25,6 @@ public class CreateGenericAccountUseCase implements CreateGenericAccountPort {
             request.firstName(),
             request.lastName(),
             request.roleName(),
-            request.accountPhoneNumber(),
             request.accountBirthDate().toString());
     Account savedAccount = this.accountCreationService.createAccount(command);
     return savedAccount.getId();

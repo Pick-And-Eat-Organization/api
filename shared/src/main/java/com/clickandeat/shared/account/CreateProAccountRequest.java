@@ -5,7 +5,6 @@ import java.time.LocalDate;
 public record CreateProAccountRequest(
     String firstName,
     String lastName,
-    String accountPhoneNumber,
     LocalDate accountBirthDate,
     String kbisRef,
     String siret,

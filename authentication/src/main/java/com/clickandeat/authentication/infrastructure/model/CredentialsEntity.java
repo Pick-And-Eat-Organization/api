@@ -31,8 +31,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(
     name = "credentials",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})},
-    indexes = {@Index(name = "idx_credentials_email", columnList = "email")})
+    uniqueConstraints = {
+      @UniqueConstraint(columnNames = {"email"}),
+      @UniqueConstraint(columnNames = {"phone_number"})
+    },
+    indexes = {
+      @Index(name = "idx_credentials_email", columnList = "email"),
+      @Index(name = "idx_credentials_phone_number", columnList = "phone_number")
+    })
 @Entity()
 @EntityListeners(AuditingEntityListener.class)
 public class CredentialsEntity {
@@ -46,6 +52,9 @@ public class CredentialsEntity {
 
   @Column(name = "password", updatable = true, nullable = false, length = 200)
   private String password;
+
+  @Column(name = "phone_number", updatable = true, nullable = false, length = 20)
+  private String phoneNumber;
 
   @Column(name = "created_at", updatable = false, nullable = false)
   @CreatedDate
@@ -75,6 +84,7 @@ public class CredentialsEntity {
   public CredentialsEntity(
       UUID id,
       String email,
+      String phoneNumber,
       String password,
       Instant createdAt,
       Instant updatedAt,
@@ -84,6 +94,7 @@ public class CredentialsEntity {
       boolean phoneVerified) {
     this.id = id;
     this.email = email;
+    this.phoneNumber = phoneNumber;
     this.password = password;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -99,6 +110,7 @@ public class CredentialsEntity {
     return new CredentialsEntity(
         credentials.getId(),
         credentials.getEmail(),
+        credentials.getPhoneNumber(),
         credentials.getPassword(),
         credentials.getCreatedAt().toInstant(),
         updatedAt,
@@ -120,6 +132,7 @@ public class CredentialsEntity {
     return new Credentials(
         id,
         email,
+        phoneNumber,
         password,
         domainRole,
         Date.from(createdAt),
@@ -139,6 +152,10 @@ public class CredentialsEntity {
 
   public String getPassword() {
     return password;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
   }
 
   public Instant getCreatedAt() {

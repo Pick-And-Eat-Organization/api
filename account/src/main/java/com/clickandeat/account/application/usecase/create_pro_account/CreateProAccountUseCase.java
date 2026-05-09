@@ -40,7 +40,6 @@ public class CreateProAccountUseCase implements CreateProAccountPort {
             request.firstName(),
             request.lastName(),
             RoleName.PRO,
-            request.accountPhoneNumber(),
             request.accountBirthDate().toString()),
         request.kbisRef(),
         request.siret(),

@@ -1,7 +1,6 @@
 package com.clickandeat.account.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.clickandeat.account.infrastructure.database.AbstractDatabaseContainersTest;
@@ -22,32 +21,8 @@ public class AccountRepositoryImplIntegrationTest extends AbstractDatabaseContai
   @Autowired private AccountRepositoryImpl accountRepository;
 
   @Test
-  public void isPhoneNumberUnique_shouldReturnFalseIfItExistsOrTrueOtherwise() {
-    String usedPhoneNumber = uniquePhoneNumber();
-    AccountEntity accountEntity =
-        new AccountEntity(
-            null,
-            "John",
-            "Doe",
-            UUID.randomUUID(),
-            LocalDate.parse("1995-09-04"),
-            usedPhoneNumber,
-            Instant.now(),
-            null,
-            RoleName.CONSUMER);
-
-    this.accountJpaRepository.save(accountEntity);
-
-    String falsePhoneNumber = "+33640404040";
-
-    assertFalse(this.accountRepository.isPhoneNumberUnique(usedPhoneNumber));
-    assertTrue(this.accountRepository.isPhoneNumberUnique(falsePhoneNumber));
-  }
-
-  @Test
   public void findAccountByCredentialsId_shouldReturnTheSavedAccount() {
     UUID credentialsId = UUID.randomUUID();
-    String phoneNumber = uniquePhoneNumber();
     AccountEntity accountEntity =
         new AccountEntity(
             null,
@@ -55,7 +30,6 @@ public class AccountRepositoryImplIntegrationTest extends AbstractDatabaseContai
             "Doe",
             credentialsId,
             LocalDate.parse("1995-09-04"),
-            phoneNumber,
             Instant.now(),
             null,
             RoleName.PRO);
@@ -67,10 +41,5 @@ public class AccountRepositoryImplIntegrationTest extends AbstractDatabaseContai
     assertTrue(account.isPresent());
     assertEquals("John", account.get().getFirstName());
     assertEquals(RoleName.PRO, account.get().getRole());
-  }
-
-  private String uniquePhoneNumber() {
-    int suffix = Math.floorMod(UUID.randomUUID().hashCode(), 100000000);
-    return String.format("+336%08d", suffix);
   }
 }

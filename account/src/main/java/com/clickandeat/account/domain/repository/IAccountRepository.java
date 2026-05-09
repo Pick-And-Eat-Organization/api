@@ -5,8 +5,6 @@ import java.util.UUID;
 import java.util.Optional;
 
 public interface IAccountRepository {
-  boolean isPhoneNumberUnique(String phoneNumber);
-
   boolean isCredentialsIdUnique(UUID credentialsId);
 
   Account saveAccount(Account account, UUID credentialsId);

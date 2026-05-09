@@ -1,10 +1,8 @@
 package com.clickandeat.account.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.clickandeat.account.domain.account.Account;
-import com.clickandeat.account.domain.account.AccountPhoneNumber;
 import com.clickandeat.account.domain.account.pro.AccountProInformations;
 import com.clickandeat.shared.enums.RoleName;
 import java.text.ParseException;
@@ -37,7 +35,6 @@ public class AccountUnitTest {
           "Doe",
           "John",
           RoleName.CONSUMER,
-          "+33650333125",
           "test@gmail.com",
           "1995-09-04",
           Date.from(Instant.now()),
@@ -50,7 +47,6 @@ public class AccountUnitTest {
           "Doe",
           "John",
           RoleName.PRO,
-          "+33650333125",
           "test@gmail.com",
           "1995-09-04",
           Date.from(Instant.now()),
@@ -69,16 +65,6 @@ public class AccountUnitTest {
     int expectedAge = Period.between(LocalDate.parse("1995-09-04"), LocalDate.now()).getYears();
 
     assertEquals(expectedAge, consumerAccount.getAccountBirthDate().getAge());
-  }
-
-  @Test
-  public void testAccountPhoneNumber_shouldGetPhoneNumber() {
-    assertEquals("+33650333125", consumerAccount.getAccountPhoneNumber().phoneNumber());
-  }
-
-  @Test
-  public void testAccountPhoneNumber_shouldThrowException() {
-    assertThrows(IllegalArgumentException.class, () -> new AccountPhoneNumber("xce33650333125"));
   }
 
   @Test

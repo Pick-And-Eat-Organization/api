@@ -32,7 +32,13 @@ class CredentialsManagementUseCaseUnitTest {
     UUID credentialsId = UUID.randomUUID();
     Credentials credentials =
         new Credentials(
-            credentialsId, "a@b.com", "hashed", new Role(RoleName.CONSUMER, null), new Date(), null);
+            credentialsId,
+            "a@b.com",
+            "+33601020310",
+            "hashed",
+            new Role(RoleName.CONSUMER, null),
+            new Date(),
+            null);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 
@@ -47,7 +53,13 @@ class CredentialsManagementUseCaseUnitTest {
     UUID credentialsId = UUID.randomUUID();
     Credentials credentials =
         new Credentials(
-            credentialsId, "a@b.com", "hashed", new Role(RoleName.CONSUMER, null), new Date(), null);
+            credentialsId,
+            "a@b.com",
+            "+33601020311",
+            "hashed",
+            new Role(RoleName.CONSUMER, null),
+            new Date(),
+            null);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 
@@ -62,7 +74,13 @@ class CredentialsManagementUseCaseUnitTest {
     UUID credentialsId = UUID.randomUUID();
     Credentials credentials =
         new Credentials(
-            credentialsId, "a@b.com", "hashed", new Role(RoleName.CONSUMER, null), new Date(), null);
+            credentialsId,
+            "a@b.com",
+            "+33601020312",
+            "hashed",
+            new Role(RoleName.CONSUMER, null),
+            new Date(),
+            null);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 
@@ -77,7 +95,13 @@ class CredentialsManagementUseCaseUnitTest {
     UUID credentialsId = UUID.randomUUID();
     Credentials credentials =
         new Credentials(
-            credentialsId, "a@b.com", "hashed", new Role(RoleName.CONSUMER, null), new Date(), null);
+            credentialsId,
+            "a@b.com",
+            "+33601020313",
+            "hashed",
+            new Role(RoleName.CONSUMER, null),
+            new Date(),
+            null);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 

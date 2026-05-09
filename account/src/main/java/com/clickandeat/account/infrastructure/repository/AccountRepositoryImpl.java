@@ -16,11 +16,6 @@ public class AccountRepositoryImpl implements IAccountRepository {
   }
 
   @Override
-  public boolean isPhoneNumberUnique(String phoneNumber) {
-    return !this.accountJpaRepository.existsAccountEntityByPhoneNumber(phoneNumber);
-  }
-
-  @Override
   public boolean isCredentialsIdUnique(UUID credentialsId) {
     return !this.accountJpaRepository.existsAccountEntityByCredentialsId(credentialsId);
   }

@@ -149,6 +149,7 @@ Les routes publiques d'authentification gèrent aussi :
 Le module `authentication` stocke maintenant dans `credentials` :
 
 - `status` : état de vie du compte (`ACTIVE`, `SUSPENDED`)
+- `phone_number` : numéro utilisé pour la connexion SMS et la vérification
 - `email_verified` : vérification manuelle de l'email
 - `phone_verified` : vérification manuelle du numéro de téléphone
 
@@ -168,6 +169,7 @@ L'utilisateur authentifié peut récupérer ses informations de compte via l'ide
 - `GET /private/api/v1/account/me/pro`
 
 Le middleware JWT injecte cet identifiant dans le `CustomUserDetails`, et le controller le transmet au module `account`.
+Le module `account` ne stocke plus le téléphone: il est relu depuis `credentials` pour composer les réponses.
 La route `/me` renvoie uniquement les informations communes du compte.
 La route `/me/pro` renvoie les informations pro enrichies et est réservée aux comptes `PRO`.
 

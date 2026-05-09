@@ -128,6 +128,12 @@ public class RegisterUseCaseUnitTest {
     UUID result = registerUseCase.execute(command);
 
     assertEquals(credentialsId, result);
+    verify(credentialsRepository)
+        .save(
+            org.mockito.ArgumentMatchers.argThat(
+                credentials ->
+                    credentials.getEmail().equals(command.email())
+                        && credentials.getPhoneNumber().equals(command.phoneNumber())));
     verify(createGenericAccountPort)
         .createGenericAccount(
             eq(
@@ -136,7 +142,6 @@ public class RegisterUseCaseUnitTest {
                     command.firstName(),
                     command.lastName(),
                     command.role().name(),
-                    command.phoneNumber(),
                     command.birthDate())));
   }
 
@@ -158,6 +163,7 @@ public class RegisterUseCaseUnitTest {
     assertEquals(CredentialsStatus.ACTIVE, savedCredentials.getStatus());
     assertFalse(savedCredentials.isEmailVerified());
     assertFalse(savedCredentials.isPhoneVerified());
+    assertEquals(command.phoneNumber(), savedCredentials.getPhoneNumber());
   }
 
   @Test
@@ -179,7 +185,6 @@ public class RegisterUseCaseUnitTest {
                 new CreateProAccountRequest(
                     command.firstName(),
                     command.lastName(),
-                    command.phoneNumber(),
                     command.birthDate(),
                     "kb",
                     "12345678901234",

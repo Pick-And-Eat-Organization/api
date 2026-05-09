@@ -62,6 +62,7 @@ public class CredentialsRepositoryImplUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "john.doe@example.com",
+            "+33601020304",
             "encryptedPass",
             new Role(RoleName.CONSUMER, null),
             new Date(),
@@ -80,6 +81,7 @@ public class CredentialsRepositoryImplUnitTest {
     UUID result = repository.save(domain);
 
     assertEquals(id, result);
+    assertEquals("+33601020304", entity.getPhoneNumber());
   }
 
   @Test

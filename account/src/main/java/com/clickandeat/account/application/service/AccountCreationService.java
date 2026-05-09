@@ -1,7 +1,6 @@
 package com.clickandeat.account.application.service;
 
 import com.clickandeat.account.application.exceptions.application.ExistingAccountForCredentialsIdException;
-import com.clickandeat.account.application.exceptions.application.PhoneNumberAlreadyUsedException;
 import com.clickandeat.account.application.exceptions.technical.DatabaseTechnicalException;
 import com.clickandeat.account.application.usecase.command.CreateGenericAccountCommand;
 import com.clickandeat.account.domain.account.Account;
@@ -21,7 +20,6 @@ public class AccountCreationService {
 
   public Account createAccount(CreateGenericAccountCommand command) {
     this.doesCredentialsIdExist(command.credentialsId());
-    this.doesPhoneNumberExist(command.accountPhoneNumber());
     Account account = this.convertCommandToAccountDomain(command);
     return this.insertAccount(account, command.credentialsId());
   }
@@ -32,19 +30,12 @@ public class AccountCreationService {
     }
   }
 
-  private void doesPhoneNumberExist(String phoneNumber) {
-    if (!this.accountRepository.isPhoneNumberUnique(phoneNumber)) {
-      throw new PhoneNumberAlreadyUsedException();
-    }
-  }
-
   private Account convertCommandToAccountDomain(CreateGenericAccountCommand command) {
     return new Account(
         null,
         command.lastName(),
         command.firstName(),
         command.roleName(),
-        command.accountPhoneNumber(),
         null,
         command.accountBirthDate(),
         Date.from(Instant.now()),

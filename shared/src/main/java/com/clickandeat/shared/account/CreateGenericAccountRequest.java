@@ -9,5 +9,4 @@ public record CreateGenericAccountRequest(
     String firstName,
     String lastName,
     RoleName roleName,
-    String accountPhoneNumber,
     LocalDate accountBirthDate) {}

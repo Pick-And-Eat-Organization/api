@@ -6,6 +6,7 @@ import com.clickandeat.account.domain.account.pro.AccountProInformations;
 import com.clickandeat.account.domain.repository.IAccountRepository;
 import com.clickandeat.shared.account.AccountProInformationsResponse;
 import com.clickandeat.shared.account.CurrentProAccountResponse;
+import com.clickandeat.shared.account.GetCurrentCredentialsPort;
 import com.clickandeat.shared.account.GetCurrentProAccountPort;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GetCurrentProAccountUseCase implements GetCurrentProAccountPort {
   private final IAccountRepository accountRepository;
+  private final GetCurrentCredentialsPort getCurrentCredentialsPort;
 
-  public GetCurrentProAccountUseCase(IAccountRepository accountRepository) {
+  public GetCurrentProAccountUseCase(
+      IAccountRepository accountRepository,
+      GetCurrentCredentialsPort getCurrentCredentialsPort) {
     this.accountRepository = accountRepository;
+    this.getCurrentCredentialsPort = getCurrentCredentialsPort;
   }
 
   @Override
@@ -26,13 +31,15 @@ public class GetCurrentProAccountUseCase implements GetCurrentProAccountPort {
         this.accountRepository
             .findAccountByCredentialsId(credentialsId)
             .orElseThrow(AccountNotFoundException::new);
+    String phoneNumber =
+        this.getCurrentCredentialsPort.getCurrentCredentials(credentialsId).phoneNumber();
     return new CurrentProAccountResponse(
         account.getId(),
         credentialsId,
         account.getRole(),
         account.getFirstName(),
         account.getLastName(),
-        account.getAccountPhoneNumber().phoneNumber(),
+        phoneNumber,
         java.time.LocalDate.parse(account.getAccountBirthDate().date()),
         account.getAccountCreatedDate() == null ? null : account.getAccountCreatedDate().toInstant(),
         account.getAccountUpdatedDate() == null ? null : account.getAccountUpdatedDate().toInstant(),

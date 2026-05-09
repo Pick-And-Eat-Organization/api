@@ -8,6 +8,7 @@ import java.util.UUID;
 public class Credentials {
   private final UUID id;
   private final String email;
+  private final String phoneNumber;
   private String password;
   private final Role role;
   private final Date createdAt;
@@ -18,12 +19,34 @@ public class Credentials {
 
   public Credentials(
       UUID id, String email, String password, Role role, Date createdAt, Date updatedAt) {
-    this(id, email, password, role, createdAt, updatedAt, CredentialsStatus.ACTIVE, false, false);
+    this(
+        id,
+        email,
+        null,
+        password,
+        role,
+        createdAt,
+        updatedAt,
+        CredentialsStatus.ACTIVE,
+        false,
+        false);
   }
 
   public Credentials(
       UUID id,
       String email,
+      String phoneNumber,
+      String password,
+      Role role,
+      Date createdAt,
+      Date updatedAt) {
+    this(id, email, phoneNumber, password, role, createdAt, updatedAt, CredentialsStatus.ACTIVE, false, false);
+  }
+
+  public Credentials(
+      UUID id,
+      String email,
+      String phoneNumber,
       String password,
       Role role,
       Date createdAt,
@@ -33,6 +56,7 @@ public class Credentials {
       boolean phoneVerified) {
     this.id = id;
     this.email = email;
+    this.phoneNumber = phoneNumber;
     this.password = password;
     this.role = role;
     this.createdAt = createdAt;
@@ -48,6 +72,10 @@ public class Credentials {
 
   public String getEmail() {
     return email;
+  }
+
+  public String getPhoneNumber() {
+    return phoneNumber;
   }
 
   public String getPassword() {

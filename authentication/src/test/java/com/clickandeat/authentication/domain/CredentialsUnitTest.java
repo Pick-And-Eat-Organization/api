@@ -24,6 +24,7 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000001",
             "hashedPassword",
             new Role(RoleName.ADMIN, scopes),
             new Date(),
@@ -37,6 +38,7 @@ public class CredentialsUnitTest {
     assertTrue(adminCredentials.isActive());
     assertFalse(adminCredentials.isEmailVerified());
     assertFalse(adminCredentials.isPhoneVerified());
+    assertEquals("+33600000001", adminCredentials.getPhoneNumber());
 
     adminCredentials.changePassword("newHashedPassword");
 
@@ -56,6 +58,7 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000002",
             "hashedPassword",
             new Role(RoleName.CONSUMER, scopes),
             new Date(),
@@ -81,6 +84,7 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000003",
             "hashedPassword",
             new Role(RoleName.PRO, scopes),
             new Date(),
@@ -99,6 +103,7 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000004",
             "hashedPassword",
             new Role(RoleName.CONSUMER, Set.of()),
             new Date(),

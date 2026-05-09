@@ -44,7 +44,6 @@ public class AccountProInformationsJpaIntegrationTest extends AbstractDatabaseCo
             "Jiji",
             "Jojo",
             RoleName.CONSUMER,
-            "+33650333125",
             "jiji-jojo@gmail.com",
             "1995-09-04",
             Date.from(Instant.now()),

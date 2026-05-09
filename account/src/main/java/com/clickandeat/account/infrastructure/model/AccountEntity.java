@@ -14,9 +14,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Table(
-    name = "account",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"phone_number"})},
-    indexes = {@Index(name = "idx_account_phone_number", columnList = "phone_number")})
+    name = "account")
 @Entity()
 @EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 public class AccountEntity {
@@ -36,9 +34,6 @@ public class AccountEntity {
 
   @Column(name = "birth_date", updatable = true, nullable = true)
   private LocalDate birthDate;
-
-  @Column(name = "phone_number", updatable = true, nullable = false)
-  private String phoneNumber;
 
   @Column(name = "created_at", updatable = false, nullable = true)
   @CreatedDate
@@ -62,7 +57,6 @@ public class AccountEntity {
       String lastName,
       UUID credentialsId,
       LocalDate birthDate,
-      String phoneNumber,
       Instant createdAt,
       Instant updatedAt,
       RoleName role) {
@@ -70,7 +64,6 @@ public class AccountEntity {
     this.firstName = firstName;
     this.lastName = lastName;
     this.birthDate = birthDate;
-    this.phoneNumber = phoneNumber;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.roleType = role;
@@ -85,7 +78,6 @@ public class AccountEntity {
         this.lastName,
         this.firstName,
         this.roleType,
-        this.phoneNumber,
         email,
         this.birthDate.toString(),
         Date.from(this.createdAt),
@@ -100,7 +92,6 @@ public class AccountEntity {
         account.getFirstName(),
         credentialsId,
         LocalDate.parse(account.getAccountBirthDate().date()),
-        account.getAccountPhoneNumber().phoneNumber(),
         account.getAccountCreatedDate().toInstant(),
         Objects.isNull(account.getAccountUpdatedDate())
             ? null
