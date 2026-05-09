@@ -12,6 +12,7 @@ import com.clickandeat.account.application.usecase.command.CreateGenericAccountC
 import com.clickandeat.account.application.usecase.create_generic_account.CreateGenericAccountUseCase;
 import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.account.domain.repository.IAccountRepository;
+import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.Instant;
 import java.util.Date;
@@ -43,7 +44,15 @@ public class CreateGenericAccountUseCaseUnitTest {
     when(this.accountRepository.isCredentialsIdUnique(credentialsId)).thenReturn(false);
     assertThrows(
         ExistingAccountForCredentialsIdException.class,
-        () -> this.createGenericProfilUseCase.execute(command));
+        () ->
+            this.createGenericProfilUseCase.createGenericAccount(
+                new CreateGenericAccountRequest(
+                    command.credentialsId(),
+                    command.firstName(),
+                    command.lastName(),
+                    command.roleName(),
+                    command.accountPhoneNumber(),
+                    java.time.LocalDate.parse(command.accountBirthDate()))));
   }
 
   @Test
@@ -57,7 +66,15 @@ public class CreateGenericAccountUseCaseUnitTest {
         .thenReturn(false);
     assertThrows(
         PhoneNumberAlreadyUsedException.class,
-        () -> this.createGenericProfilUseCase.execute(command));
+        () ->
+            this.createGenericProfilUseCase.createGenericAccount(
+                new CreateGenericAccountRequest(
+                    command.credentialsId(),
+                    command.firstName(),
+                    command.lastName(),
+                    command.roleName(),
+                    command.accountPhoneNumber(),
+                    java.time.LocalDate.parse(command.accountBirthDate()))));
   }
 
   @Test
@@ -82,7 +99,15 @@ public class CreateGenericAccountUseCaseUnitTest {
     when(this.accountRepository.isPhoneNumberUnique(command.accountPhoneNumber())).thenReturn(true);
     when(accountRepository.saveAccount(any(Account.class), eq(credentialsId)))
         .thenReturn(persisted);
-    Long result = this.createGenericProfilUseCase.execute(command);
+    Long result =
+        this.createGenericProfilUseCase.createGenericAccount(
+            new CreateGenericAccountRequest(
+                command.credentialsId(),
+                command.firstName(),
+                command.lastName(),
+                command.roleName(),
+                command.accountPhoneNumber(),
+                java.time.LocalDate.parse(command.accountBirthDate())));
     assertEquals(1L, result);
   }
 }

@@ -7,7 +7,9 @@ import com.clickandeat.account.application.exceptions.application.PhoneNumberAlr
 import com.clickandeat.account.application.usecase.command.CreateGenericAccountCommand;
 import com.clickandeat.account.application.usecase.create_generic_account.CreateGenericAccountUseCase;
 import com.clickandeat.account.infrastructure.database.AbstractDatabaseContainersTest;
+import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import com.clickandeat.shared.enums.RoleName;
+import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
@@ -26,8 +28,19 @@ public class CreateGenericAccountUseCaseFunctionalTest extends AbstractDatabaseC
         credentialsId, "John", "Doe", RoleName.CONSUMER, phoneNumber, "1995-01-01");
   }
 
+  private CreateGenericAccountRequest toRequest(CreateGenericAccountCommand command) {
+    return new CreateGenericAccountRequest(
+        command.credentialsId(),
+        command.firstName(),
+        command.lastName(),
+        command.roleName(),
+        command.accountPhoneNumber(),
+        LocalDate.parse(command.accountBirthDate()));
+  }
+
   void saveGenericAccount() {
-    this.createGenericAccountUseCase.execute(getCommand(FIXED_CREDENTIALS_ID, FIXED_PHONE_NUMBER));
+    this.createGenericAccountUseCase.createGenericAccount(
+        toRequest(getCommand(FIXED_CREDENTIALS_ID, FIXED_PHONE_NUMBER)));
   }
 
   @BeforeAll
@@ -40,8 +53,8 @@ public class CreateGenericAccountUseCaseFunctionalTest extends AbstractDatabaseC
     assertThrows(
         ExistingAccountForCredentialsIdException.class,
         () ->
-            this.createGenericAccountUseCase.execute(
-                getCommand(FIXED_CREDENTIALS_ID, FIXED_PHONE_NUMBER)));
+            this.createGenericAccountUseCase.createGenericAccount(
+                toRequest(getCommand(FIXED_CREDENTIALS_ID, FIXED_PHONE_NUMBER))));
   }
 
   @Test
@@ -49,14 +62,15 @@ public class CreateGenericAccountUseCaseFunctionalTest extends AbstractDatabaseC
     assertThrows(
         PhoneNumberAlreadyUsedException.class,
         () ->
-            this.createGenericAccountUseCase.execute(
-                getCommand(UUID.randomUUID(), FIXED_PHONE_NUMBER)));
+            this.createGenericAccountUseCase.createGenericAccount(
+                toRequest(getCommand(UUID.randomUUID(), FIXED_PHONE_NUMBER))));
   }
 
   @Test
   void createGenericAccount_shouldCreateAccount() {
     Long result =
-        this.createGenericAccountUseCase.execute(getCommand(UUID.randomUUID(), "+6690909090"));
+        this.createGenericAccountUseCase.createGenericAccount(
+            toRequest(getCommand(UUID.randomUUID(), "+6690909090")));
     assertNotNull(result);
   }
 }

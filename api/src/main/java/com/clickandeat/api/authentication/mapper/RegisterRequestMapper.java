@@ -12,6 +12,10 @@ public class RegisterRequestMapper {
 
   public static RegisterCommand toCommand(RegisterRequestDto dto) {
     RoleName roleName = RoleName.valueOf(dto.getRole().toUpperCase());
+    return toCommand(dto, roleName);
+  }
+
+  public static RegisterCommand toCommand(RegisterRequestDto dto, RoleName roleName) {
     Role role = new Role(roleName, null);
 
     return new RegisterCommand(

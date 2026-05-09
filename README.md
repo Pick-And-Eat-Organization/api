@@ -120,6 +120,16 @@ L'API utilise le standard **JWT** avec deux types de tokens :
 - `EXPIRATION_ACCESS_TOKEN` : Durée de vie de l'access token (ex. : `15m` pour 15 minutes).
 - `EXPIRATION_REFRESH_TOKEN` : Durée de vie du refresh token (ex. : `7d` pour 7 jours).
 
+### Routes de register
+
+Les inscriptions sont maintenant séparées par type d'utilisateur :
+
+- `POST /public/api/v1/authentication/register/consumer`
+- `POST /public/api/v1/authentication/register/pro`
+- `POST /public/api/v1/authentication/register/admin`
+
+Le contrôleur public reste dédié au login, au refresh token et au logout.
+
 ## 🗃 Infrastructure technique
 
 - **Base de données** : PostgreSQL

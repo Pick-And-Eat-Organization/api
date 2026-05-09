@@ -16,12 +16,6 @@ public class CreateGenericAccountUseCase implements CreateGenericAccountPort {
     this.accountCreationService = accountCreationService;
   }
 
-  @Transactional
-  public Long execute(CreateGenericAccountCommand command) {
-    Account savedAccount = this.accountCreationService.createAccount(command);
-    return savedAccount.getId();
-  }
-
   @Override
   @Transactional
   public Long createGenericAccount(CreateGenericAccountRequest request) {
@@ -33,6 +27,7 @@ public class CreateGenericAccountUseCase implements CreateGenericAccountPort {
             request.roleName(),
             request.accountPhoneNumber(),
             request.accountBirthDate().toString());
-    return this.execute(command);
+    Account savedAccount = this.accountCreationService.createAccount(command);
+    return savedAccount.getId();
   }
 }

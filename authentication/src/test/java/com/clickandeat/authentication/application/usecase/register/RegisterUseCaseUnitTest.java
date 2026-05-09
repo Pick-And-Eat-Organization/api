@@ -17,6 +17,8 @@ import com.clickandeat.authentication.domain.service.IPasswordService;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.shared.account.CreateGenericAccountPort;
 import com.clickandeat.shared.account.CreateGenericAccountRequest;
+import com.clickandeat.shared.account.CreateProAccountPort;
+import com.clickandeat.shared.account.CreateProAccountRequest;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +38,7 @@ public class RegisterUseCaseUnitTest {
   private IPasswordService passwordService;
 
   private CreateGenericAccountPort createGenericAccountPort;
+  private CreateProAccountPort createProAccountPort;
 
   private RegisterCommand getCommand() {
     String dateString = "2025-05-24";
@@ -55,8 +58,13 @@ public class RegisterUseCaseUnitTest {
     this.credentialsRepository = mock(ICredentialsRepository.class);
     this.passwordService = mock(IPasswordService.class);
     this.createGenericAccountPort = mock(CreateGenericAccountPort.class);
+    this.createProAccountPort = mock(CreateProAccountPort.class);
     this.registerUseCase =
-        new RegisterUseCase(credentialsRepository, passwordService, createGenericAccountPort);
+        new RegisterUseCase(
+            credentialsRepository,
+            passwordService,
+            createGenericAccountPort,
+            createProAccountPort);
   }
 
   @Test
@@ -128,5 +136,38 @@ public class RegisterUseCaseUnitTest {
                     command.role().name(),
                     command.phoneNumber(),
                     command.birthDate())));
+  }
+
+  @Test
+  public void registerPro_shouldThrowIfRoleIsNotPro() {
+    RegisterCommand command = getCommand();
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registerUseCase.registerPro(
+                new RegisterCommand(
+                    command.email(),
+                    command.password(),
+                    command.firstName(),
+                    command.lastName(),
+                    command.phoneNumber(),
+                    command.birthDate(),
+                    new Role(RoleName.CONSUMER, null)),
+                new CreateProAccountRequest(
+                    command.firstName(),
+                    command.lastName(),
+                    command.phoneNumber(),
+                    command.birthDate(),
+                    "kb",
+                    "12345678901234",
+                    "legal",
+                    "SARL",
+                    "addr1",
+                    null,
+                    null,
+                    "city",
+                    "75000",
+                    "France")));
   }
 }

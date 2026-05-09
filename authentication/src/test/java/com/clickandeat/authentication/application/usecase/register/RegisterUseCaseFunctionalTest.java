@@ -22,6 +22,10 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
   @Autowired private JdbcTemplate jdbcTemplate;
 
   private RegisterCommand getCommand(String email) {
+    return getCommand(email, "+33650333340");
+  }
+
+  private RegisterCommand getCommand(String email, String phoneNumber) {
     String dateString = "2025-05-24";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     return new RegisterCommand(
@@ -29,7 +33,7 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
         "clearPassword",
         "jerome",
         "juda",
-        "+33650333340",
+        phoneNumber,
         LocalDate.parse(dateString, formatter),
         new Role(RoleName.CONSUMER, null));
   }
@@ -59,7 +63,7 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
   @Test
   void register_shouldReturnDifferentIds_whenRegisteringTwoDifferentUsers() {
     RegisterCommand one = getCommand("user1@example.com");
-    RegisterCommand two = getCommand("user2@example.com");
+    RegisterCommand two = getCommand("user2@example.com", "+33650333341");
 
     UUID id1 = registerUseCase.execute(one);
     UUID id2 = registerUseCase.execute(two);
