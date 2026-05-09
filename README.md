@@ -149,9 +149,11 @@ Les routes publiques d'authentification gèrent aussi :
 L'utilisateur authentifié peut récupérer ses informations de compte via l'identifiant `credentials_id` extrait du JWT :
 
 - `GET /private/api/v1/account/me`
+- `GET /private/api/v1/account/me/pro`
 
 Le middleware JWT injecte cet identifiant dans le `CustomUserDetails`, et le controller le transmet au module `account`.
-La réponse renvoie les informations du compte courant, avec les informations pro si le rôle est `PRO`.
+La route `/me` renvoie uniquement les informations communes du compte.
+La route `/me/pro` renvoie les informations pro enrichies et est réservée aux comptes `PRO`.
 
 ## 🗃 Infrastructure technique
 

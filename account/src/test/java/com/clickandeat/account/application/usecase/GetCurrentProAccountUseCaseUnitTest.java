@@ -6,10 +6,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.clickandeat.account.application.exceptions.application.AccountNotFoundException;
-import com.clickandeat.account.application.usecase.get_current_account.GetCurrentAccountUseCase;
+import com.clickandeat.account.application.usecase.get_current_pro_account.GetCurrentProAccountUseCase;
 import com.clickandeat.account.domain.account.Account;
+import com.clickandeat.account.domain.account.pro.AccountProInformations;
 import com.clickandeat.account.domain.repository.IAccountRepository;
-import com.clickandeat.shared.account.CurrentAccountResponse;
+import com.clickandeat.shared.account.CurrentProAccountResponse;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.Instant;
 import java.util.Date;
@@ -17,12 +18,12 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class GetCurrentAccountUseCaseUnitTest {
+class GetCurrentProAccountUseCaseUnitTest {
 
   @Test
-  void shouldReturnCurrentAccountResponse() {
+  void shouldReturnCurrentProAccountResponse() {
     IAccountRepository accountRepository = mock(IAccountRepository.class);
-    GetCurrentAccountUseCase useCase = new GetCurrentAccountUseCase(accountRepository);
+    GetCurrentProAccountUseCase useCase = new GetCurrentProAccountUseCase(accountRepository);
     UUID credentialsId = UUID.randomUUID();
     Account account =
         new Account(
@@ -35,28 +36,39 @@ class GetCurrentAccountUseCaseUnitTest {
             "1995-01-01",
             Date.from(Instant.parse("2025-01-01T12:00:00Z")),
             Date.from(Instant.parse("2025-01-02T12:00:00Z")),
-            null);
+            new AccountProInformations(
+                42L,
+                "KBIS-2025-001",
+                "12345678900011",
+                "Click and Eat",
+                "SAS",
+                "1 rue de Paris",
+                "Batiment A",
+                "Etage 1",
+                "Paris",
+                "75001",
+                "France"));
 
     when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.of(account));
 
-    CurrentAccountResponse response = useCase.getCurrentAccount(credentialsId);
+    CurrentProAccountResponse response = useCase.getCurrentProAccount(credentialsId);
 
     assertEquals(42L, response.accountId());
     assertEquals(credentialsId, response.credentialsId());
     assertEquals(RoleName.PRO, response.role());
     assertEquals("John", response.firstName());
-    assertEquals("Doe", response.lastName());
-    assertEquals("+33601020304", response.phoneNumber());
+    assertEquals("KBIS-2025-001", response.proInformations().kbisRef());
+    assertEquals("France", response.proInformations().country());
   }
 
   @Test
   void shouldThrowWhenAccountDoesNotExist() {
     IAccountRepository accountRepository = mock(IAccountRepository.class);
-    GetCurrentAccountUseCase useCase = new GetCurrentAccountUseCase(accountRepository);
+    GetCurrentProAccountUseCase useCase = new GetCurrentProAccountUseCase(accountRepository);
     UUID credentialsId = UUID.randomUUID();
 
     when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.empty());
 
-    assertThrows(AccountNotFoundException.class, () -> useCase.getCurrentAccount(credentialsId));
+    assertThrows(AccountNotFoundException.class, () -> useCase.getCurrentProAccount(credentialsId));
   }
 }
