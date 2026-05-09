@@ -3,7 +3,9 @@ package com.clickandeat.authentication.application.usecase.register;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.clickandeat.authentication.application.exceptions.application.EmailAlreadyUsedException;
@@ -13,6 +15,8 @@ import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.repository.ICredentialsRepository;
 import com.clickandeat.authentication.domain.service.IPasswordService;
 import com.clickandeat.authentication.domain.valueobject.Role;
+import com.clickandeat.shared.account.CreateGenericAccountPort;
+import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +35,8 @@ public class RegisterUseCaseUnitTest {
 
   private IPasswordService passwordService;
 
+  private CreateGenericAccountPort createGenericAccountPort;
+
   private RegisterCommand getCommand() {
     String dateString = "2025-05-24";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -48,7 +54,9 @@ public class RegisterUseCaseUnitTest {
   void init() {
     this.credentialsRepository = mock(ICredentialsRepository.class);
     this.passwordService = mock(IPasswordService.class);
-    this.registerUseCase = new RegisterUseCase(credentialsRepository, passwordService);
+    this.createGenericAccountPort = mock(CreateGenericAccountPort.class);
+    this.registerUseCase =
+        new RegisterUseCase(credentialsRepository, passwordService, createGenericAccountPort);
   }
 
   @Test
@@ -104,9 +112,21 @@ public class RegisterUseCaseUnitTest {
     UUID credentialsId = UUID.randomUUID();
 
     when(credentialsRepository.save(any(Credentials.class))).thenReturn(credentialsId);
+    when(createGenericAccountPort.createGenericAccount(any(CreateGenericAccountRequest.class)))
+        .thenReturn(1L);
 
     UUID result = registerUseCase.execute(command);
 
     assertEquals(credentialsId, result);
+    verify(createGenericAccountPort)
+        .createGenericAccount(
+            eq(
+                new CreateGenericAccountRequest(
+                    credentialsId,
+                    command.firstName(),
+                    command.lastName(),
+                    command.role().name(),
+                    command.phoneNumber(),
+                    command.birthDate())));
   }
 }

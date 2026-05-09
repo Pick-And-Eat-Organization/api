@@ -12,12 +12,14 @@ import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 @Tag("functional")
 @Transactional
 public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTest {
   @Autowired private RegisterUseCase registerUseCase;
+  @Autowired private JdbcTemplate jdbcTemplate;
 
   private RegisterCommand getCommand(String email) {
     String dateString = "2025-05-24";
@@ -37,6 +39,11 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
     RegisterCommand command = getCommand("unique-user@example.com");
     UUID result = registerUseCase.execute(command);
     assertNotNull(result, "Le UUID retourné ne doit pas être null");
+    Integer count =
+        jdbcTemplate.queryForObject(
+            "select count(*) from account where credentials_id = ?", Integer.class, result);
+    assertNotNull(count);
+    assertEquals(1, count);
   }
 
   @Test

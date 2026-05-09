@@ -6,6 +6,8 @@ import com.clickandeat.authentication.application.exceptions.technical.DatabaseT
 import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.repository.ICredentialsRepository;
 import com.clickandeat.authentication.domain.service.IPasswordService;
+import com.clickandeat.shared.account.CreateGenericAccountPort;
+import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,10 +20,15 @@ public class RegisterUseCase implements IRegisterUseCase {
 
   private final ICredentialsRepository credentialsRepository;
   private final IPasswordService passwordService;
+  private final CreateGenericAccountPort createGenericAccountPort;
 
-  public RegisterUseCase(ICredentialsRepository respository, IPasswordService service) {
+  public RegisterUseCase(
+      ICredentialsRepository respository,
+      IPasswordService service,
+      CreateGenericAccountPort createGenericAccountPort) {
     this.credentialsRepository = respository;
     this.passwordService = service;
+    this.createGenericAccountPort = createGenericAccountPort;
   }
 
   @Override
@@ -31,7 +38,9 @@ public class RegisterUseCase implements IRegisterUseCase {
     String hashedPassword = hashPassword(command.password());
     Credentials credentials = createCredentials(command, hashedPassword);
 
-    return persistCredentials(credentials);
+    UUID credentialsId = persistCredentials(credentials);
+    this.createGenericAccount(credentialsId, command);
+    return credentialsId;
   }
 
   private void ensureEmailIsUnique(String email) {
@@ -58,5 +67,17 @@ public class RegisterUseCase implements IRegisterUseCase {
     } catch (DataIntegrityViolationException e) {
       throw new DatabaseTechnicalException("An error occurred while inserting the user", e);
     }
+  }
+
+  private void createGenericAccount(UUID credentialsId, RegisterCommand command) {
+    CreateGenericAccountRequest request =
+        new CreateGenericAccountRequest(
+            credentialsId,
+            command.firstName(),
+            command.lastName(),
+            command.role().name(),
+            command.phoneNumber(),
+            command.birthDate());
+    this.createGenericAccountPort.createGenericAccount(request);
   }
 }
