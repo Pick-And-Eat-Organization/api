@@ -10,6 +10,7 @@ via Docker avec **PostgreSQL** comme base de données et **Dragonfly** comme cac
 - [Prérequis](#-prérequis)
 - [Lancement](#-lancement)
 - [Image Docker](#-image-docker)
+- [Migrations Flyway](#-migrations-flyway)
 - [Configuration](#%EF%B8%8F-exemple-de-fichier-env)
 - [Authentification](#-authentification--jwt)
 - [Infrastructure](#-infrastructure-technique)
@@ -55,6 +56,27 @@ docker pull ghcr.io/click-and-eat-organization/click-and-eat-api:0.0.1-snapshot
 ```
 
 ⚠️ **Note** : L'accès à l'image est restreint. Assurez-vous d'avoir les droits nécessaires.
+
+## 🧬 Migrations Flyway
+
+Le projet inclut une image Docker Flyway custom définie dans [`CustomFlyway.Dockerfile`](./CustomFlyway.Dockerfile).
+Cette image copie les migrations SQL présentes dans [`migrations/src/main/resources/db/migration`](./migrations/src/main/resources/db/migration)
+dans le conteneur Flyway, puis exécute les scripts contre la base PostgreSQL.
+
+Pour lancer ces migrations en local, utilisez le script [`scripts/run-flyway-docker-image-dev.sh`](./scripts/run-flyway-docker-image-dev.sh).
+Ce script build l'image Flyway custom puis lance le conteneur avec ces 3 variables d'environnement :
+
+- `FLYWAY_URL` : URL JDBC de la base cible
+- `FLYWAY_USER` : utilisateur PostgreSQL
+- `FLYWAY_PASSWORD` : mot de passe PostgreSQL
+
+Exemple :
+
+```bash
+./scripts/run-flyway-docker-image-dev.sh
+```
+
+Le script contient directement les valeurs utilisées en environnement de développement.
 
 ## ⚙️ Exemple de fichier .env
 

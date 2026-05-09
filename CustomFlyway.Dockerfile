@@ -1,4 +1,4 @@
-FROM flyway/flyway:latest
+FROM flyway/flyway:12.4.0
 
 COPY migrations/src/main/resources/db/migration /flyway/sql
 
