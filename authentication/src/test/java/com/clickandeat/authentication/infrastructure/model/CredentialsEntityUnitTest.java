@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.domain.valueobject.Scope;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.util.Date;
 import java.util.Set;
@@ -37,8 +38,12 @@ class CredentialsEntityUnitTest {
     assertEquals(domain.getId(), result.getId());
     assertEquals(domain.getEmail(), result.getEmail());
     assertEquals(domain.getPassword(), result.getPassword());
+    assertEquals(CredentialsStatus.ACTIVE, entity.getStatus());
+    assertFalse(entity.isEmailVerified());
+    assertFalse(entity.isPhoneVerified());
 
     assertEquals(RoleName.CONSUMER, result.getRole().name());
+    assertEquals(CredentialsStatus.ACTIVE, result.getStatus());
   }
 
   @Test
@@ -59,8 +64,10 @@ class CredentialsEntityUnitTest {
 
     assertNotNull(entity);
     assertNull(entity.getUpdatedAt());
+    assertEquals(CredentialsStatus.ACTIVE, entity.getStatus());
 
     Credentials result = entity.toDomain();
     assertNull(result.getUpdatedAt());
+    assertEquals(CredentialsStatus.ACTIVE, result.getStatus());
   }
 }

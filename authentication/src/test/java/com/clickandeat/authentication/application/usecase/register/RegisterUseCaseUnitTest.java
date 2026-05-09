@@ -1,6 +1,7 @@
 package com.clickandeat.authentication.application.usecase.register;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -19,6 +20,7 @@ import com.clickandeat.shared.account.CreateGenericAccountPort;
 import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import com.clickandeat.shared.account.CreateProAccountPort;
 import com.clickandeat.shared.account.CreateProAccountRequest;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -136,6 +138,26 @@ public class RegisterUseCaseUnitTest {
                     command.role().name(),
                     command.phoneNumber(),
                     command.birthDate())));
+  }
+
+  @Test
+  public void register_shouldCreateActiveCredentialsByDefault() {
+    RegisterCommand command = getCommand();
+
+    when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.empty());
+    when(passwordService.hashPassword(command.password())).thenReturn("hashPassword");
+    when(credentialsRepository.save(any(Credentials.class))).thenReturn(UUID.randomUUID());
+
+    registerUseCase.execute(command);
+
+    org.mockito.ArgumentCaptor<Credentials> captor =
+        org.mockito.ArgumentCaptor.forClass(Credentials.class);
+    verify(credentialsRepository).save(captor.capture());
+    Credentials savedCredentials = captor.getValue();
+
+    assertEquals(CredentialsStatus.ACTIVE, savedCredentials.getStatus());
+    assertFalse(savedCredentials.isEmailVerified());
+    assertFalse(savedCredentials.isPhoneVerified());
   }
 
   @Test

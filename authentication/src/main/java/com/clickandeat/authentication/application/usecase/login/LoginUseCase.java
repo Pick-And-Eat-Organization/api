@@ -2,6 +2,7 @@ package com.clickandeat.authentication.application.usecase.login;
 
 import com.clickandeat.authentication.application.ITokenRepository;
 import com.clickandeat.authentication.application.TokenPair;
+import com.clickandeat.authentication.application.exceptions.application.CredentialsNotActiveException;
 import com.clickandeat.authentication.application.exceptions.application.EmailNotFoundException;
 import com.clickandeat.authentication.application.exceptions.application.PasswordNotMatchException;
 import com.clickandeat.authentication.application.exceptions.application.RoleMismatchException;
@@ -36,6 +37,7 @@ public class LoginUseCase implements ILoginUseCase {
   @Override
   public TokenPair execute(LoginCommand command, RoleName expectedRole) {
     Credentials credentials = this.getCredentials(command);
+    this.checkActive(credentials);
     this.checkPassword(command, credentials.getPassword());
     this.checkRole(expectedRole, credentials.getRole().name());
     return this.generateTokens(credentials.getId(), credentials.getRole().name().toString());
@@ -56,6 +58,12 @@ public class LoginUseCase implements ILoginUseCase {
   private void checkPassword(LoginCommand command, String hashedPassword) {
     if (!this.passwordService.matches(command.password(), hashedPassword)) {
       throw new PasswordNotMatchException();
+    }
+  }
+
+  private void checkActive(Credentials credentials) {
+    if (!credentials.isActive()) {
+      throw new CredentialsNotActiveException();
     }
   }
 

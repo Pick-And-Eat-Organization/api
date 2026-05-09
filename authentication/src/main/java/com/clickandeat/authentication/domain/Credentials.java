@@ -1,6 +1,7 @@
 package com.clickandeat.authentication.domain;
 
 import com.clickandeat.authentication.domain.valueobject.Role;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,15 +12,34 @@ public class Credentials {
   private final Role role;
   private final Date createdAt;
   private Date updatedAt;
+  private CredentialsStatus status;
+  private boolean emailVerified;
+  private boolean phoneVerified;
 
   public Credentials(
       UUID id, String email, String password, Role role, Date createdAt, Date updatedAt) {
+    this(id, email, password, role, createdAt, updatedAt, CredentialsStatus.ACTIVE, false, false);
+  }
+
+  public Credentials(
+      UUID id,
+      String email,
+      String password,
+      Role role,
+      Date createdAt,
+      Date updatedAt,
+      CredentialsStatus status,
+      boolean emailVerified,
+      boolean phoneVerified) {
     this.id = id;
     this.email = email;
     this.password = password;
     this.role = role;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.status = status;
+    this.emailVerified = emailVerified;
+    this.phoneVerified = phoneVerified;
   }
 
   public UUID getId() {
@@ -56,6 +76,42 @@ public class Credentials {
 
   public Date getUpdatedAt() {
     return updatedAt;
+  }
+
+  public CredentialsStatus getStatus() {
+    return status;
+  }
+
+  public boolean isEmailVerified() {
+    return emailVerified;
+  }
+
+  public boolean isPhoneVerified() {
+    return phoneVerified;
+  }
+
+  public boolean isActive() {
+    return this.status == CredentialsStatus.ACTIVE;
+  }
+
+  public void activate() {
+    this.status = CredentialsStatus.ACTIVE;
+    this.updatedAt = new Date();
+  }
+
+  public void suspend() {
+    this.status = CredentialsStatus.SUSPENDED;
+    this.updatedAt = new Date();
+  }
+
+  public void verifyEmail() {
+    this.emailVerified = true;
+    this.updatedAt = new Date();
+  }
+
+  public void verifyPhone() {
+    this.phoneVerified = true;
+    this.updatedAt = new Date();
   }
 
   public void changePassword(String password) {

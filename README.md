@@ -144,6 +144,22 @@ Les routes publiques d'authentification gèrent aussi :
 - `POST /public/api/v1/authentication/refresh-token`
 - `DELETE /public/api/v1/authentication/logout`
 
+### Statut et vérification des credentials
+
+Le module `authentication` stocke maintenant dans `credentials` :
+
+- `status` : état de vie du compte (`ACTIVE`, `SUSPENDED`)
+- `email_verified` : vérification manuelle de l'email
+- `phone_verified` : vérification manuelle du numéro de téléphone
+
+Le login refuse les credentials non actifs. Pour l'instant, la vérification d'email ou de téléphone n'utilise pas de provider externe
+(pas de Mail/SMS gateway). Elle est simulée par des routes admin dédiées, ce qui permet de garder le flux fonctionnel et testable :
+
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/activate`
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/suspend`
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/verify-email`
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/verify-phone`
+
 ### Route account
 
 L'utilisateur authentifié peut récupérer ses informations de compte via l'identifiant `credentials_id` extrait du JWT :

@@ -1,6 +1,7 @@
 package com.clickandeat.authentication.infrastructure.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.clickandeat.authentication.domain.Credentials;
@@ -40,6 +41,9 @@ public class CredentialsRepositoryImplIntegrationTest extends AbstractDatabaseCo
     assertEquals(email, fromDb.get().getEmail());
     assertEquals(id, fromDb.get().getId());
     assertEquals(roleName, fromDb.get().getRole().name());
+    assertTrue(fromDb.get().isActive());
+    assertFalse(fromDb.get().isEmailVerified());
+    assertFalse(fromDb.get().isPhoneVerified());
   }
 
   @Test
@@ -60,5 +64,6 @@ public class CredentialsRepositoryImplIntegrationTest extends AbstractDatabaseCo
     assertEquals(email, fromDb.get().getEmail());
     assertEquals(id, fromDb.get().getId());
     assertEquals(roleName, fromDb.get().getRole().name());
+    assertTrue(fromDb.get().isActive());
   }
 }

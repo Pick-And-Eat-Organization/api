@@ -2,6 +2,7 @@ package com.clickandeat.api.authentication.exception;
 
 import com.clickandeat.api.authentication.controllers.PrivateAuthenticationController;
 import com.clickandeat.api.authentication.controllers.PublicAuthenticationController;
+import com.clickandeat.api.authentication.controllers.AdminCredentialsController;
 import com.clickandeat.api.shared.ErrorApiResponse;
 import com.clickandeat.authentication.application.exceptions.application.*;
 import com.clickandeat.authentication.application.exceptions.technical.CannotHashPasswordException;
@@ -22,7 +23,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice(
     basePackageClasses = {
       PublicAuthenticationController.class,
-      PrivateAuthenticationController.class
+      PrivateAuthenticationController.class,
+      AdminCredentialsController.class
     })
 public class AuthenticationExceptionHandler {
 
@@ -97,5 +99,19 @@ public class AuthenticationExceptionHandler {
       AbstractApplicationException ex) {
     return ResponseEntity.status(HttpStatusCode.valueOf(403))
         .body(new ErrorApiResponse(ex.getKey(), ex.getMessage(), 403, null));
+  }
+
+  @ExceptionHandler(CredentialsNotActiveException.class)
+  public ResponseEntity<ErrorApiResponse> handleCredentialsNotActiveException(
+      CredentialsNotActiveException ex) {
+    return ResponseEntity.status(HttpStatusCode.valueOf(403))
+        .body(new ErrorApiResponse(ex.getKey(), ex.getMessage(), 403, null));
+  }
+
+  @ExceptionHandler(CredentialsNotFoundException.class)
+  public ResponseEntity<ErrorApiResponse> handleCredentialsNotFoundException(
+      CredentialsNotFoundException ex) {
+    return ResponseEntity.status(HttpStatusCode.valueOf(404))
+        .body(new ErrorApiResponse(ex.getKey(), ex.getMessage(), 404, null));
   }
 }

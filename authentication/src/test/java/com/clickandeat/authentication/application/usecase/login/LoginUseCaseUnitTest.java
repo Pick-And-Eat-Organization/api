@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import com.clickandeat.authentication.application.ITokenRepository;
 import com.clickandeat.authentication.application.TokenPair;
 import com.clickandeat.authentication.application.exceptions.application.EmailNotFoundException;
+import com.clickandeat.authentication.application.exceptions.application.CredentialsNotActiveException;
 import com.clickandeat.authentication.application.exceptions.application.PasswordNotMatchException;
 import com.clickandeat.authentication.application.exceptions.application.RoleMismatchException;
 import com.clickandeat.authentication.domain.Credentials;
@@ -66,6 +67,7 @@ public class LoginUseCaseUnitTest {
     Credentials credentials = mock(Credentials.class);
     Role consumerRole = new Role(RoleName.CONSUMER, null);
     when(credentials.getRole()).thenReturn(consumerRole);
+    when(credentials.isActive()).thenReturn(true);
     when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.of(credentials));
     when(credentials.getPassword()).thenReturn("hashed-password");
     when(passwordService.matches(command.password(), "hashed-password")).thenReturn(false);
@@ -83,6 +85,7 @@ public class LoginUseCaseUnitTest {
     when(credentials.getPassword()).thenReturn("hashed-password");
     when(passwordService.matches(command.password(), "hashed-password")).thenReturn(true);
     when(credentials.getRole()).thenReturn(consumerRole);
+    when(credentials.isActive()).thenReturn(true);
 
     assertThrows(
         RoleMismatchException.class, () -> loginUseCase.execute(command, RoleName.CONSUMER));
@@ -98,6 +101,7 @@ public class LoginUseCaseUnitTest {
     when(credentials.getId()).thenReturn(userId);
     when(credentials.getRole()).thenReturn(role);
     when(credentials.getPassword()).thenReturn("hashed-password");
+    when(credentials.isActive()).thenReturn(true);
 
     when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.of(credentials));
     when(passwordService.matches(command.password(), "hashed-password")).thenReturn(true);
@@ -124,6 +128,7 @@ public class LoginUseCaseUnitTest {
     when(credentials.getId()).thenReturn(userId);
     when(credentials.getRole()).thenReturn(role);
     when(credentials.getPassword()).thenReturn("hashed-password");
+    when(credentials.isActive()).thenReturn(true);
 
     when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.of(credentials));
     when(passwordService.matches(command.password(), "hashed-password")).thenReturn(true);
@@ -138,5 +143,20 @@ public class LoginUseCaseUnitTest {
     verify(tokenRepository)
         .storeRefreshToken(
             eq("jti-value"), eq(userId.toString()), eq(TokenService.MAX_DURATION_REFRESH_TOKEN));
+  }
+
+  @Test
+  void login_shouldThrowCredentialsNotActiveException_whenAccountIsSuspended() {
+    LoginCommand command = generateCommand();
+    Credentials credentials = mock(Credentials.class);
+    Role consumerRole = new Role(RoleName.CONSUMER, null);
+
+    when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.of(credentials));
+    when(credentials.isActive()).thenReturn(false);
+    when(credentials.getRole()).thenReturn(consumerRole);
+
+    assertThrows(
+        CredentialsNotActiveException.class,
+        () -> loginUseCase.execute(command, RoleName.CONSUMER));
   }
 }

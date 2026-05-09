@@ -1,0 +1,269 @@
+{
+  "info": {
+    "_postman_id": "b4f0d7a7-0f0f-4f1d-8d8a-0d9d7f5a8f11",
+    "name": "Click and Eat API",
+    "description": "Postman collection generated from the current OpenAPI surface of the Click and Eat API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login consumer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"consumer@example.com\",\n  \"password\": \"AstrongPassw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/public/api/v1/authentication/login/consumer"
+          }
+        },
+        {
+          "name": "Login pro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pro@example.com\",\n  \"password\": \"AstrongPassw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/public/api/v1/authentication/login/pro"
+          }
+        },
+        {
+          "name": "Login admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"AstrongPassw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/public/api/v1/authentication/login/admin"
+          }
+        },
+        {
+          "name": "Register consumer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"consumer@example.com\",\n  \"password\": \"AstrongPassw0rd!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+33601020304\",\n  \"birthDate\": \"1995-01-01\",\n  \"role\": \"CONSUMER\"\n}"
+            },
+            "url": "{{baseUrl}}/public/api/v1/authentication/register/consumer"
+          }
+        },
+        {
+          "name": "Register pro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pro@example.com\",\n  \"password\": \"AstrongPassw0rd!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+33601020304\",\n  \"birthDate\": \"1995-01-01\",\n  \"kbisRef\": \"KBIS-2025-001\",\n  \"siret\": \"12345678900011\",\n  \"legalName\": \"Click and Eat\",\n  \"legalForm\": \"SAS\",\n  \"address1\": \"1 rue de Paris\",\n  \"address2\": \"Batiment A\",\n  \"address3\": \"Etage 1\",\n  \"city\": \"Paris\",\n  \"postalCode\": \"75001\",\n  \"country\": \"France\"\n}"
+            },
+            "url": "{{baseUrl}}/public/api/v1/authentication/register/pro"
+          }
+        },
+        {
+          "name": "Register admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"AstrongPassw0rd!\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+33601020304\",\n  \"birthDate\": \"1995-01-01\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            "url": "{{baseUrl}}/private/api/v1/authentication/register/admin"
+          }
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{refreshToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/public/api/v1/authentication/refresh-token"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{refreshToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/public/api/v1/authentication/logout"
+          }
+        },
+        {
+          "name": "Update password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"OldPassw0rd!\",\n  \"newPassword\": \"NewPassw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/private/api/v1/authentication/update-password"
+          }
+        },
+        {
+          "name": "Activate credentials",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/private/api/v1/authentication/admin/credentials/{{credentialsId}}/activate"
+          }
+        },
+        {
+          "name": "Suspend credentials",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/private/api/v1/authentication/admin/credentials/{{credentialsId}}/suspend"
+          }
+        },
+        {
+          "name": "Verify email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/private/api/v1/authentication/admin/credentials/{{credentialsId}}/verify-email"
+          }
+        },
+        {
+          "name": "Verify phone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/private/api/v1/authentication/admin/credentials/{{credentialsId}}/verify-phone"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Get current account",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/private/api/v1/account/me"
+          }
+        },
+        {
+          "name": "Get current pro account",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/private/api/v1/account/me/pro"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "accessToken",
+      "value": "replace-with-access-token"
+    },
+    {
+      "key": "refreshToken",
+      "value": "replace-with-refresh-token"
+    },
+    {
+      "key": "credentialsId",
+      "value": "replace-with-credentials-id"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.domain.valueobject.Scope;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.util.Date;
 import java.util.HashSet;
@@ -33,6 +34,9 @@ public class CredentialsUnitTest {
     assertTrue(adminCredentials.hasAdminRole());
     assertFalse(adminCredentials.hasConsummerRole());
     assertFalse(adminCredentials.hasProRole());
+    assertTrue(adminCredentials.isActive());
+    assertFalse(adminCredentials.isEmailVerified());
+    assertFalse(adminCredentials.isPhoneVerified());
 
     adminCredentials.changePassword("newHashedPassword");
 
@@ -61,6 +65,7 @@ public class CredentialsUnitTest {
     assertTrue(consumerCredentials.hasConsummerRole());
     assertFalse(consumerCredentials.hasProRole());
     assertFalse(consumerCredentials.hasAdminRole());
+    assertEquals(CredentialsStatus.ACTIVE, consumerCredentials.getStatus());
   }
 
   @Test
@@ -86,5 +91,27 @@ public class CredentialsUnitTest {
     assertTrue(proCredentials.hasProRole());
     assertFalse(proCredentials.hasConsummerRole());
     assertFalse(proCredentials.hasAdminRole());
+  }
+
+  @Test
+  public void credentials_shouldSupportActivationAndVerificationLifecycle() {
+    Credentials credentials =
+        new Credentials(
+            UUID.randomUUID(),
+            "test@test.com",
+            "hashedPassword",
+            new Role(RoleName.CONSUMER, Set.of()),
+            new Date(),
+            null);
+
+    credentials.suspend();
+    credentials.verifyEmail();
+    credentials.verifyPhone();
+    credentials.activate();
+
+    assertTrue(credentials.isActive());
+    assertTrue(credentials.isEmailVerified());
+    assertTrue(credentials.isPhoneVerified());
+    assertEquals(CredentialsStatus.ACTIVE, credentials.getStatus());
   }
 }
