@@ -1,7 +1,6 @@
 package com.clickandeat.api.authentication.controllers;
 
 import com.clickandeat.api.authentication.dto.LoginRequestDto;
-import com.clickandeat.api.authentication.dto.RegisterRequestDto;
 import com.clickandeat.api.authentication.mapper.LoginRequestMapper;
 import com.clickandeat.api.authentication.swagger.*;
 import com.clickandeat.api.shared.GenericApiResponse;
@@ -43,19 +42,19 @@ public class PublicAuthenticationController {
   }
 
   @Operation(
-      summary = "Log a consumer",
-      description = "Log a new consumer and returns an api response with tokens.",
+      summary = "Login a consumer",
+      description = "Authenticate a consumer and return access and refresh tokens.",
       requestBody =
           @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Consumer registration data",
+              description = "Consumer login data",
               required = true,
               content =
                   @Content(
-                      schema = @Schema(implementation = RegisterRequestDto.class),
+                      schema = @Schema(implementation = LoginRequestDto.class),
                       examples =
                           @ExampleObject(
                               name = "LoginRequestDto",
-                              summary = "Example registration",
+                              summary = "Consumer login example",
                               value =
                                   """
                 {
@@ -103,11 +102,11 @@ public class PublicAuthenticationController {
   }
 
   @Operation(
-      summary = "Log a pro",
-      description = "Log a new pro and returns an api response with tokens.",
+      summary = "Login a pro",
+      description = "Authenticate a pro and return access and refresh tokens.",
       requestBody =
           @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Pro registration data",
+              description = "Pro login data",
               required = true,
               content =
                   @Content(
@@ -115,7 +114,7 @@ public class PublicAuthenticationController {
                       examples =
                           @ExampleObject(
                               name = "LoginRequestDto",
-                              summary = "Example registration",
+                              summary = "Pro login example",
                               value =
                                   """
                           {
@@ -163,11 +162,11 @@ public class PublicAuthenticationController {
   }
 
   @Operation(
-      summary = "Log a admin",
-      description = "Log a new admin and returns an api response with tokens.",
+      summary = "Login an admin",
+      description = "Authenticate an admin and return access and refresh tokens.",
       requestBody =
           @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Admin registration data",
+              description = "Admin login data",
               required = true,
               content =
                   @Content(
@@ -175,7 +174,7 @@ public class PublicAuthenticationController {
                       examples =
                           @ExampleObject(
                               name = "LoginRequestDto",
-                              summary = "Example registration",
+                              summary = "Admin login example",
                               value =
                                   """
                           {

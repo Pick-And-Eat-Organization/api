@@ -130,6 +130,19 @@ Les inscriptions sont maintenant séparées par type d'utilisateur :
 
 Le contrôleur public reste dédié au login, au refresh token et au logout.
 
+### Routes de login
+
+Les connexions sont également séparées par type d'utilisateur :
+
+- `POST /public/api/v1/authentication/login/consumer`
+- `POST /public/api/v1/authentication/login/pro`
+- `POST /public/api/v1/authentication/login/admin`
+
+Les routes publiques d'authentification gèrent aussi :
+
+- `POST /public/api/v1/authentication/refresh-token`
+- `DELETE /public/api/v1/authentication/logout`
+
 ## 🗃 Infrastructure technique
 
 - **Base de données** : PostgreSQL
