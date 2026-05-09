@@ -47,30 +47,40 @@ public class ProRegisterRequestDto {
   private final String birthDate;
 
   @NotBlank
+  @Schema(description = "Kbis reference", example = "KBIS-2025-001")
   private final String kbisRef;
 
   @NotBlank
+  @Schema(description = "SIRET number", example = "12345678900011")
   private final String siret;
 
   @NotBlank
+  @Schema(description = "Legal name", example = "Click and Eat")
   private final String legalName;
 
   @NotBlank
+  @Schema(description = "Legal form", example = "SAS")
   private final String legalForm;
 
   @NotBlank
+  @Schema(description = "Address line 1", example = "1 rue de Paris")
   private final String address1;
 
+  @Schema(description = "Address line 2", example = "Batiment A")
   private final String address2;
+  @Schema(description = "Address line 3", example = "Etage 1")
   private final String address3;
 
   @NotBlank
+  @Schema(description = "City", example = "Paris")
   private final String city;
 
   @NotBlank
+  @Schema(description = "Postal code", example = "75001")
   private final String postalCode;
 
   @NotBlank
+  @Schema(description = "Country", example = "France")
   private final String country;
 
   public ProRegisterRequestDto(

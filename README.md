@@ -126,7 +126,7 @@ Les inscriptions sont maintenant séparées par type d'utilisateur :
 
 - `POST /public/api/v1/authentication/register/consumer`
 - `POST /public/api/v1/authentication/register/pro`
-- `POST /public/api/v1/authentication/register/admin`
+- `POST /private/api/v1/authentication/register/admin`
 
 Le contrôleur public reste dédié au login, au refresh token et au logout.
 

@@ -37,6 +37,24 @@ public class RegisterRequestMapperUnitTest {
   }
 
   @Test
+  void shouldMapRegisterRequestDtoToRegisterCommandWithOverriddenRole() {
+    RegisterRequestDto dto =
+        new RegisterRequestDto(
+            "admin@example.com",
+            "securePass123",
+            "Jane",
+            "Doe",
+            "0123456789",
+            "1998-04-20",
+            "CONSUMER");
+
+    RegisterCommand command = RegisterRequestMapper.toCommand(dto, RoleName.ADMIN);
+
+    assertEquals(RoleName.ADMIN, command.role().name());
+    assertEquals("admin@example.com", command.email());
+  }
+
+  @Test
   void shouldThrowExceptionForInvalidRole() {
     RegisterRequestDto dto =
         new RegisterRequestDto(
