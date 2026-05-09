@@ -1,6 +1,7 @@
 package com.clickandeat.account.infrastructure.model;
 
 import com.clickandeat.account.domain.account.pro.AccountProInformations;
+import com.clickandeat.shared.enums.LegalForm;
 import jakarta.persistence.*;
 
 @Entity()
@@ -41,8 +42,10 @@ public class AccountProInformationsEntity {
   @Column(name = "country", updatable = true, nullable = false)
   private String country;
 
+  @Enumerated(EnumType.STRING)
+  @org.hibernate.annotations.JdbcType(org.hibernate.dialect.PostgreSQLEnumJdbcType.class)
   @Column(name = "legal_form", updatable = true, nullable = false)
-  private String legalForm;
+  private LegalForm legalForm;
 
   @Column(name = "legal_name", updatable = true, nullable = false)
   private String legalName;
@@ -58,7 +61,7 @@ public class AccountProInformationsEntity {
       String city,
       String cp,
       String country,
-      String legalForm,
+      LegalForm legalForm,
       String legalName) {
     this.id = id;
     this.account = account;
@@ -86,7 +89,7 @@ public class AccountProInformationsEntity {
         this.kbis_ref,
         this.siret,
         this.legalName,
-        this.legalForm,
+        this.legalForm.name(),
         this.address1,
         this.address2,
         this.address3,
@@ -109,7 +112,7 @@ public class AccountProInformationsEntity {
         accountProInformations.getLocalisation().city(),
         accountProInformations.getLocalisation().postalCode(),
         accountProInformations.getLocalisation().country(),
-        accountProInformations.getLegal_form(),
+        LegalForm.fromString(accountProInformations.getLegal_form()),
         accountProInformations.getLegal_name());
   }
 }

@@ -60,8 +60,7 @@ public class AccountProInformationsJpaIntegrationTest extends AbstractDatabaseCo
 
     AccountProInformationsEntity accountProInformationsEntity =
         accountProInformationsJpaRepository.save(
-            AccountProInformationsEntity.fromDomain(
-                accountProInformations, accountEntity));
+            AccountProInformationsEntity.fromDomain(accountProInformations, accountEntity));
 
     assertEquals(accountId, accountProInformationsEntity.toDomain().getId());
   }

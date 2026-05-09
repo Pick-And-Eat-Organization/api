@@ -74,7 +74,8 @@ public class CurrentProAccountController {
   public ResponseEntity<GenericApiResponse<CurrentProAccountResponse>> getCurrentProAccount(
       @AuthenticationPrincipal CustomUserDetails userDetails) {
     UUID credentialsId = userDetails.getCredentialsId();
-    CurrentProAccountResponse account = this.getCurrentProAccountPort.getCurrentProAccount(credentialsId);
+    CurrentProAccountResponse account =
+        this.getCurrentProAccountPort.getCurrentProAccount(credentialsId);
     return ResponseEntity.ok(new GenericApiResponse<>("Account retrieved successfully.", account));
   }
 }
