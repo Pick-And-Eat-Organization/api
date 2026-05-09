@@ -41,7 +41,7 @@ class PublicAuthenticationControllerUnitTest {
   void proLoginShouldUseLoginDtoAndSwaggerMetadata() throws Exception {
     Method method =
         PublicAuthenticationController.class.getDeclaredMethod(
-            "loginForPRO", com.clickandeat.api.authentication.dto.LoginRequestDto.class);
+            "loginForPro", com.clickandeat.api.authentication.dto.LoginRequestDto.class);
     Operation operation = method.getAnnotation(Operation.class);
     PostMapping postMapping = method.getAnnotation(PostMapping.class);
 

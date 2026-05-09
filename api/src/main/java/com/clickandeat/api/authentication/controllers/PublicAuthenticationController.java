@@ -154,7 +154,7 @@ public class PublicAuthenticationController {
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
   @PostMapping("/login/pro")
-  public ResponseEntity<GenericApiResponse<TokenPair>> loginForPRO(
+  public ResponseEntity<GenericApiResponse<TokenPair>> loginForPro(
       @Valid @RequestBody LoginRequestDto dto) {
     LoginCommand command = LoginRequestMapper.toCommand(dto);
     TokenPair token = this.loginUseCase.execute(command, RoleName.PRO);
