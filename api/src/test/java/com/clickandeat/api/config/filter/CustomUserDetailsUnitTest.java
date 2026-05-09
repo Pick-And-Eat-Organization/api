@@ -37,6 +37,7 @@ public class CustomUserDetailsUnitTest {
     assertEquals(userId.toString(), userDetails.getUsername());
     assertNull(userDetails.getPassword());
     assertEquals(userId, userDetails.getUserId());
+    assertEquals(userId, userDetails.getCredentialsId());
     assertEquals(role, userDetails.getRole());
     assertEquals(scopes, userDetails.getScopes());
 

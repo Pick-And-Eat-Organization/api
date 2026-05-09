@@ -7,18 +7,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
-  private final UUID userId;
+  private final UUID credentialsId;
   private final String role;
   private final Set<Scope> scopes;
 
-  public CustomUserDetails(UUID userId, String role, Set<Scope> scopes) {
-    this.userId = userId;
+  public CustomUserDetails(UUID credentialsId, String role, Set<Scope> scopes) {
+    this.credentialsId = credentialsId;
     this.role = role;
     this.scopes = scopes;
   }
 
+  public UUID getCredentialsId() {
+    return credentialsId;
+  }
+
   public UUID getUserId() {
-    return userId;
+    return credentialsId;
   }
 
   public String getRole() {
@@ -48,7 +52,7 @@ public class CustomUserDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    return userId.toString();
+    return credentialsId.toString();
   }
 
   @Override

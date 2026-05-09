@@ -90,7 +90,7 @@ public class AccountEntity {
         this.birthDate.toString(),
         Date.from(this.createdAt),
         Objects.isNull(this.updatedAt) ? null : Date.from(this.updatedAt),
-        null);
+        Objects.isNull(this.accountProInformations) ? null : this.accountProInformations.toDomain());
   }
 
   public static AccountEntity fromDomain(Account account, UUID credentialsId) {

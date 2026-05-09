@@ -20,6 +20,7 @@ via Docker avec **PostgreSQL** comme base de données et **Dragonfly** comme cac
 L'API est organisée en modules découplés selon les principes du **Domain-Driven Design** :
 
 - **`authentication/`** : Module métier dédié à l'authentification.
+- **`account/`** : Module métier dédié à la création et à la lecture du compte utilisateur.
 - **`shared/`** : Contient les composants partagés (exceptions, types, middlewares, etc.).
 - **`api/`** : Module central, point d'entrée de l'application, qui orchestre les modules métiers.
 
@@ -142,6 +143,15 @@ Les routes publiques d'authentification gèrent aussi :
 
 - `POST /public/api/v1/authentication/refresh-token`
 - `DELETE /public/api/v1/authentication/logout`
+
+### Route account
+
+L'utilisateur authentifié peut récupérer ses informations de compte via l'identifiant `credentials_id` extrait du JWT :
+
+- `GET /private/api/v1/account/me`
+
+Le middleware JWT injecte cet identifiant dans le `CustomUserDetails`, et le controller le transmet au module `account`.
+La réponse renvoie les informations du compte courant, avec les informations pro si le rôle est `PRO`.
 
 ## 🗃 Infrastructure technique
 

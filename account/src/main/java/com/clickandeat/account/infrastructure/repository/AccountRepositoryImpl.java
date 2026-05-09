@@ -3,6 +3,7 @@ package com.clickandeat.account.infrastructure.repository;
 import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.account.domain.repository.IAccountRepository;
 import com.clickandeat.account.infrastructure.model.AccountEntity;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
@@ -33,5 +34,10 @@ public class AccountRepositoryImpl implements IAccountRepository {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public Optional<Account> findAccountByCredentialsId(UUID credentialsId) {
+    return this.accountJpaRepository.findByCredentialsId(credentialsId).map(entity -> entity.toDomain(null));
   }
 }
