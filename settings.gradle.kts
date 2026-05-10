@@ -12,4 +12,4 @@ plugins {
 }
 
 rootProject.name = "click-and-eat-api"
-include("api", "authentication", "shared", "migrations", "account")
+include("api", "authentication", "shared", "migrations", "account", "notifications")
