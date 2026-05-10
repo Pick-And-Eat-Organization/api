@@ -47,28 +47,40 @@ public class CurrentProAccountController {
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
         @ApiResponse(
             responseCode = "403",
             description = "Authenticated user is not a pro.",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
         @ApiResponse(
             responseCode = "404",
             description = "Account not found.",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
         @ApiResponse(
             responseCode = "500",
             description = "Internal server error.",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class)))
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class)))
       })
   @GetMapping("/me/pro")
   public ResponseEntity<GenericApiResponse<CurrentProAccountResponse>> getCurrentProAccount(

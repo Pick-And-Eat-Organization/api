@@ -13,8 +13,7 @@ import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-@Table(
-    name = "account")
+@Table(name = "account")
 @Entity()
 @EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 public class AccountEntity {
@@ -82,7 +81,9 @@ public class AccountEntity {
         this.birthDate.toString(),
         Date.from(this.createdAt),
         Objects.isNull(this.updatedAt) ? null : Date.from(this.updatedAt),
-        Objects.isNull(this.accountProInformations) ? null : this.accountProInformations.toDomain());
+        Objects.isNull(this.accountProInformations)
+            ? null
+            : this.accountProInformations.toDomain());
   }
 
   public static AccountEntity fromDomain(Account account, UUID credentialsId) {

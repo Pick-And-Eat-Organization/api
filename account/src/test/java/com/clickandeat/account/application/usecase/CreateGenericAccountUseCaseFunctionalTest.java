@@ -22,7 +22,8 @@ public class CreateGenericAccountUseCaseFunctionalTest extends AbstractDatabaseC
       UUID.fromString("11111111-1111-1111-1111-111111111111");
 
   private CreateGenericAccountCommand getCommand(UUID credentialsId) {
-    return new CreateGenericAccountCommand(credentialsId, "John", "Doe", RoleName.CONSUMER, "1995-01-01");
+    return new CreateGenericAccountCommand(
+        credentialsId, "John", "Doe", RoleName.CONSUMER, "1995-01-01");
   }
 
   private CreateGenericAccountRequest toRequest(CreateGenericAccountCommand command) {

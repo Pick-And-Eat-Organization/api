@@ -50,9 +50,7 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
     assertEquals(1, count);
     String phoneNumber =
         jdbcTemplate.queryForObject(
-            "select phone_number from credentials where credentials_id = ?",
-            String.class,
-            result);
+            "select phone_number from credentials where credentials_id = ?", String.class, result);
     assertEquals(command.phoneNumber(), phoneNumber);
   }
 

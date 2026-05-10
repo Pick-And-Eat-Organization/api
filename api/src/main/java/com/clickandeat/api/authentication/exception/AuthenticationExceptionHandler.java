@@ -1,18 +1,17 @@
 package com.clickandeat.api.authentication.exception;
 
+import com.clickandeat.api.authentication.controllers.AdminCredentialsController;
 import com.clickandeat.api.authentication.controllers.PrivateAuthenticationController;
 import com.clickandeat.api.authentication.controllers.PublicAuthenticationController;
-import com.clickandeat.api.authentication.controllers.AdminCredentialsController;
 import com.clickandeat.api.shared.ErrorApiResponse;
 import com.clickandeat.authentication.application.exceptions.application.*;
 import com.clickandeat.authentication.application.exceptions.technical.CannotHashPasswordException;
 import com.clickandeat.authentication.application.exceptions.technical.DatabaseTechnicalException;
+import com.clickandeat.shared.exceptions.AbstractApplicationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.clickandeat.shared.exceptions.AbstractApplicationException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

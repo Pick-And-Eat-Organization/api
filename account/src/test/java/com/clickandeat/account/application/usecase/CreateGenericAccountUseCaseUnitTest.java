@@ -38,7 +38,8 @@ public class CreateGenericAccountUseCaseUnitTest {
   public void createGenericAccount_shouldFailIfAccountAlreadyExists() {
     UUID credentialsId = UUID.randomUUID();
     CreateGenericAccountCommand command =
-        new CreateGenericAccountCommand(credentialsId, "John", "Doe", RoleName.CONSUMER, "1995-01-01");
+        new CreateGenericAccountCommand(
+            credentialsId, "John", "Doe", RoleName.CONSUMER, "1995-01-01");
     when(this.accountRepository.isCredentialsIdUnique(credentialsId)).thenReturn(false);
     assertThrows(
         ExistingAccountForCredentialsIdException.class,
@@ -56,7 +57,8 @@ public class CreateGenericAccountUseCaseUnitTest {
   public void createGenericAccount_shouldCreateAccount() {
     UUID credentialsId = UUID.randomUUID();
     CreateGenericAccountCommand command =
-        new CreateGenericAccountCommand(credentialsId, "John", "Doe", RoleName.CONSUMER, "1995-01-01");
+        new CreateGenericAccountCommand(
+            credentialsId, "John", "Doe", RoleName.CONSUMER, "1995-01-01");
     Account persisted =
         new Account(
             1L,
