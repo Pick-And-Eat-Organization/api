@@ -2,10 +2,10 @@ package com.clickandeat.account.application.usecase.command;
 
 public record CreateProAccountCommand(
     CreateGenericAccountCommand baseCommand,
-    String kbis_ref,
+    String kbisRef,
     String siret,
-    String legal_name,
-    String legal_form,
+    String legalName,
+    String legalForm,
     String address1,
     String address2,
     String address3,

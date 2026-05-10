@@ -52,10 +52,10 @@ public class GetCurrentProAccountUseCase implements GetCurrentProAccountPort {
       throw new AccountNotFoundException();
     }
     return new AccountProInformationsResponse(
-        proInformations.getKbis_ref(),
+        proInformations.getKbisRef(),
         proInformations.getSiret(),
-        proInformations.getLegal_name(),
-        proInformations.getLegal_form(),
+        proInformations.getLegalName(),
+        proInformations.getLegalForm(),
         proInformations.getLocalisation().address1(),
         proInformations.getLocalisation().address2(),
         proInformations.getLocalisation().address3(),

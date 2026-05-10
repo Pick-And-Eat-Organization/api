@@ -19,7 +19,7 @@ public class AccountProInformationsEntity {
   private AccountEntity account;
 
   @Column(name = "kbis_ref", updatable = true, nullable = true)
-  private String kbis_ref;
+  private String kbisRef;
 
   @Column(name = "siret", updatable = true, nullable = false)
   private String siret;
@@ -53,7 +53,7 @@ public class AccountProInformationsEntity {
   public AccountProInformationsEntity(
       Long id,
       AccountEntity account,
-      String kbis_ref,
+      String kbisRef,
       String siret,
       String address1,
       String address2,
@@ -65,7 +65,7 @@ public class AccountProInformationsEntity {
       String legalName) {
     this.id = id;
     this.account = account;
-    this.kbis_ref = kbis_ref;
+    this.kbisRef = kbisRef;
     this.siret = siret;
     this.address1 = address1;
     this.address2 = address2;
@@ -86,7 +86,7 @@ public class AccountProInformationsEntity {
   public AccountProInformations toDomain() {
     return new AccountProInformations(
         this.account.getId(),
-        this.kbis_ref,
+        this.kbisRef,
         this.siret,
         this.legalName,
         this.legalForm.name(),
@@ -104,7 +104,7 @@ public class AccountProInformationsEntity {
     return new AccountProInformationsEntity(
         null,
         accountEntity,
-        accountProInformations.getKbis_ref(),
+        accountProInformations.getKbisRef(),
         accountProInformations.getSiret(),
         accountProInformations.getLocalisation().address1(),
         accountProInformations.getLocalisation().address2(),
@@ -112,7 +112,7 @@ public class AccountProInformationsEntity {
         accountProInformations.getLocalisation().city(),
         accountProInformations.getLocalisation().postalCode(),
         accountProInformations.getLocalisation().country(),
-        LegalForm.fromString(accountProInformations.getLegal_form()),
-        accountProInformations.getLegal_name());
+        LegalForm.fromString(accountProInformations.getLegalForm()),
+        accountProInformations.getLegalName());
   }
 }

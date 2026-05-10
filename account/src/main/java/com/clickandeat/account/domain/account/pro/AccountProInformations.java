@@ -2,18 +2,18 @@ package com.clickandeat.account.domain.account.pro;
 
 public class AccountProInformations {
   private final Long id;
-  private final String kbis_ref;
+  private final String kbisRef;
   private final String siret;
-  private final String legal_name;
-  private final String legal_form;
+  private final String legalName;
+  private final String legalForm;
   private final Localisation localisation;
 
   public AccountProInformations(
       Long id,
-      String kbis_ref,
+      String kbisRef,
       String siret,
-      String legal_name,
-      String legal_form,
+      String legalName,
+      String legalForm,
       String address1,
       String address2,
       String address3,
@@ -21,10 +21,10 @@ public class AccountProInformations {
       String postalCode,
       String country) {
     this.id = id;
-    this.kbis_ref = kbis_ref;
+    this.kbisRef = kbisRef;
     this.siret = siret;
-    this.legal_name = legal_name;
-    this.legal_form = legal_form;
+    this.legalName = legalName;
+    this.legalForm = legalForm;
     this.localisation = new Localisation(address1, address2, address3, city, postalCode, country);
   }
 
@@ -32,20 +32,20 @@ public class AccountProInformations {
     return id;
   }
 
-  public String getKbis_ref() {
-    return kbis_ref;
+  public String getKbisRef() {
+    return kbisRef;
   }
 
   public String getSiret() {
     return siret;
   }
 
-  public String getLegal_name() {
-    return legal_name;
+  public String getLegalName() {
+    return legalName;
   }
 
-  public String getLegal_form() {
-    return legal_form;
+  public String getLegalForm() {
+    return legalForm;
   }
 
   public Localisation getLocalisation() {

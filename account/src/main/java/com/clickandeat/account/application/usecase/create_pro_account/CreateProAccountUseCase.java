@@ -1,8 +1,8 @@
 package com.clickandeat.account.application.usecase.create_pro_account;
 
 import com.clickandeat.account.application.service.AccountCreationService;
-import com.clickandeat.account.application.usecase.command.CreateProAccountCommand;
 import com.clickandeat.account.application.usecase.command.CreateGenericAccountCommand;
+import com.clickandeat.account.application.usecase.command.CreateProAccountCommand;
 import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.account.domain.account.pro.AccountProInformations;
 import com.clickandeat.account.domain.repository.IProAccountRepository;
@@ -37,10 +37,10 @@ public class CreateProAccountUseCase implements CreateProAccountPort {
     return new CreateProAccountCommand(
         new CreateGenericAccountCommand(
             credentialsId,
-            request.firstName(),
-            request.lastName(),
-            RoleName.PRO,
-            request.accountBirthDate().toString()),
+        request.firstName(),
+        request.lastName(),
+        RoleName.PRO,
+        request.accountBirthDate().toString()),
         request.kbisRef(),
         request.siret(),
         request.legalName(),
@@ -56,10 +56,10 @@ public class CreateProAccountUseCase implements CreateProAccountPort {
   private AccountProInformations convertToDomain(CreateProAccountCommand command, Long id) {
     return new AccountProInformations(
         id,
-        command.kbis_ref(),
+        command.kbisRef(),
         command.siret(),
-        command.legal_name(),
-        command.legal_form(),
+        command.legalName(),
+        command.legalForm(),
         command.address1(),
         command.address2(),
         command.address3(),
