@@ -12,7 +12,6 @@ import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,6 @@ public class AccountProInformationsJpaIntegrationTest extends AbstractDatabaseCo
             "Jiji",
             "Jojo",
             RoleName.CONSUMER,
-            "+33650333125",
             "jiji-jojo@gmail.com",
             "1995-09-04",
             Date.from(Instant.now()),
@@ -61,8 +59,7 @@ public class AccountProInformationsJpaIntegrationTest extends AbstractDatabaseCo
 
     AccountProInformationsEntity accountProInformationsEntity =
         accountProInformationsJpaRepository.save(
-            AccountProInformationsEntity.fromDomain(
-                accountProInformations, accountEntity, credentialsId));
+            AccountProInformationsEntity.fromDomain(accountProInformations, accountEntity));
 
     assertEquals(accountId, accountProInformationsEntity.toDomain().getId());
   }

@@ -2,6 +2,7 @@ package com.clickandeat.shared.token;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Duration;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -19,7 +20,7 @@ class TokenProviderIntegrationTest {
 
   @BeforeEach
   void setUp() {
-    long accessExpiration = 6000;
+    Duration accessExpiration = Duration.ofMillis(6000);
     tokenProvider = new TokenProvider(secret, accessExpiration);
     userId = UUID.randomUUID();
     role = "ROLE_USER";
@@ -58,7 +59,7 @@ class TokenProviderIntegrationTest {
 
   @Test
   void verifyToken_shouldReturnFalseForExpiredToken() throws InterruptedException {
-    TokenProvider shortLivedProvider = new TokenProvider(secret, 1);
+    TokenProvider shortLivedProvider = new TokenProvider(secret, Duration.ofSeconds(1));
     String token = shortLivedProvider.generateAccessToken(new TokenPayload(userId, role));
     Thread.sleep(1500);
     assertFalse(shortLivedProvider.verifyAccessToken(token));

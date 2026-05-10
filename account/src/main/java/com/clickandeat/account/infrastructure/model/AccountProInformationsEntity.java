@@ -1,8 +1,8 @@
 package com.clickandeat.account.infrastructure.model;
 
 import com.clickandeat.account.domain.account.pro.AccountProInformations;
+import com.clickandeat.shared.enums.LegalForm;
 import jakarta.persistence.*;
-import java.util.UUID;
 
 @Entity()
 @Table(
@@ -13,13 +13,13 @@ public class AccountProInformationsEntity {
   @Column(name = "account_id", updatable = false, nullable = false)
   private Long id;
 
-  @OneToOne
+  @OneToOne(optional = false)
   @MapsId
   @JoinColumn(name = "account_id")
   private AccountEntity account;
 
   @Column(name = "kbis_ref", updatable = true, nullable = true)
-  private String kbis_ref;
+  private String kbisRef;
 
   @Column(name = "siret", updatable = true, nullable = false)
   private String siret;
@@ -33,25 +33,27 @@ public class AccountProInformationsEntity {
   @Column(name = "address3", updatable = true, nullable = true)
   private String address3;
 
-  @Column(name = "city", updatable = true, nullable = true)
+  @Column(name = "city", updatable = true, nullable = false)
   private String city;
 
-  @Column(name = "cp", updatable = true, nullable = true)
+  @Column(name = "cp", updatable = true, nullable = false)
   private String cp;
 
-  @Column(name = "country", updatable = true, nullable = true)
+  @Column(name = "country", updatable = true, nullable = false)
   private String country;
 
-  @Column(name = "legal_form", updatable = true, nullable = true)
-  private String legalForm;
+  @Enumerated(EnumType.STRING)
+  @org.hibernate.annotations.JdbcType(org.hibernate.dialect.PostgreSQLEnumJdbcType.class)
+  @Column(name = "legal_form", updatable = true, nullable = false)
+  private LegalForm legalForm;
 
-  @Column(name = "legal_name", updatable = true, nullable = true)
+  @Column(name = "legal_name", updatable = true, nullable = false)
   private String legalName;
 
   public AccountProInformationsEntity(
       Long id,
       AccountEntity account,
-      String kbis_ref,
+      String kbisRef,
       String siret,
       String address1,
       String address2,
@@ -59,11 +61,11 @@ public class AccountProInformationsEntity {
       String city,
       String cp,
       String country,
-      String legalForm,
+      LegalForm legalForm,
       String legalName) {
     this.id = id;
     this.account = account;
-    this.kbis_ref = kbis_ref;
+    this.kbisRef = kbisRef;
     this.siret = siret;
     this.address1 = address1;
     this.address2 = address2;
@@ -84,10 +86,10 @@ public class AccountProInformationsEntity {
   public AccountProInformations toDomain() {
     return new AccountProInformations(
         this.account.getId(),
-        this.kbis_ref,
+        this.kbisRef,
         this.siret,
         this.legalName,
-        this.legalForm,
+        this.legalForm.name(),
         this.address1,
         this.address2,
         this.address3,
@@ -98,12 +100,11 @@ public class AccountProInformationsEntity {
 
   public static AccountProInformationsEntity fromDomain(
       AccountProInformations accountProInformations,
-      AccountEntity accountEntity,
-      UUID credentialsId) {
+      AccountEntity accountEntity) {
     return new AccountProInformationsEntity(
         null,
         accountEntity,
-        accountProInformations.getKbis_ref(),
+        accountProInformations.getKbisRef(),
         accountProInformations.getSiret(),
         accountProInformations.getLocalisation().address1(),
         accountProInformations.getLocalisation().address2(),
@@ -111,7 +112,7 @@ public class AccountProInformationsEntity {
         accountProInformations.getLocalisation().city(),
         accountProInformations.getLocalisation().postalCode(),
         accountProInformations.getLocalisation().country(),
-        accountProInformations.getLegal_form(),
-        accountProInformations.getLegal_name());
+        LegalForm.fromString(accountProInformations.getLegalForm()),
+        accountProInformations.getLegalName());
   }
 }

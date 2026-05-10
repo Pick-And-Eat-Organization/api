@@ -11,6 +11,7 @@ java {
 
 dependencies {
 	api(project(":shared"))
+	testImplementation(project(":account"))
 	testImplementation(project(":migrations"))
 	testImplementation("org.flywaydb:flyway-core:11.10.4")
 	testRuntimeOnly("org.flywaydb:flyway-database-postgresql:11.10.4")
@@ -58,4 +59,3 @@ tasks.named<Test>("test") {
 				!requested.contains("functionalTest")
 	}
 }
-

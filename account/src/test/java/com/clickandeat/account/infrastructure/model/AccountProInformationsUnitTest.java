@@ -33,7 +33,6 @@ public class AccountProInformationsUnitTest {
           "Doe",
           "John",
           RoleName.CONSUMER,
-          "+33650333125",
           "test@gmail.com",
           "1995-09-04",
           Date.from(Instant.now()),
@@ -47,8 +46,7 @@ public class AccountProInformationsUnitTest {
     AccountProInformationsEntity accountProInformations =
         AccountProInformationsEntity.fromDomain(
             PRO_ACCOUNT_INFOS,
-            AccountEntity.fromDomain(ACCOUNT_DOMAIN, UUID.randomUUID()),
-            ACCOUNT_ID);
+            AccountEntity.fromDomain(ACCOUNT_DOMAIN, UUID.randomUUID()));
 
     assertEquals(1L, accountProInformations.toDomain().getId());
 

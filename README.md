@@ -10,6 +10,7 @@ via Docker avec **PostgreSQL** comme base de données et **Dragonfly** comme cac
 - [Prérequis](#-prérequis)
 - [Lancement](#-lancement)
 - [Image Docker](#-image-docker)
+- [Migrations Flyway](#-migrations-flyway)
 - [Configuration](#%EF%B8%8F-exemple-de-fichier-env)
 - [Authentification](#-authentification--jwt)
 - [Infrastructure](#-infrastructure-technique)
@@ -19,6 +20,7 @@ via Docker avec **PostgreSQL** comme base de données et **Dragonfly** comme cac
 L'API est organisée en modules découplés selon les principes du **Domain-Driven Design** :
 
 - **`authentication/`** : Module métier dédié à l'authentification.
+- **`account/`** : Module métier dédié à la création et à la lecture du compte utilisateur.
 - **`shared/`** : Contient les composants partagés (exceptions, types, middlewares, etc.).
 - **`api/`** : Module central, point d'entrée de l'application, qui orchestre les modules métiers.
 
@@ -55,6 +57,27 @@ docker pull ghcr.io/click-and-eat-organization/click-and-eat-api:0.0.1-snapshot
 ```
 
 ⚠️ **Note** : L'accès à l'image est restreint. Assurez-vous d'avoir les droits nécessaires.
+
+## 🧬 Migrations Flyway
+
+Le projet inclut une image Docker Flyway custom définie dans [`CustomFlyway.Dockerfile`](./CustomFlyway.Dockerfile).
+Cette image copie les migrations SQL présentes dans [`migrations/src/main/resources/db/migration`](./migrations/src/main/resources/db/migration)
+dans le conteneur Flyway, puis exécute les scripts contre la base PostgreSQL.
+
+Pour lancer ces migrations en local, utilisez le script [`scripts/run-flyway-docker-image-dev.sh`](./scripts/run-flyway-docker-image-dev.sh).
+Ce script build l'image Flyway custom puis lance le conteneur avec ces 3 variables d'environnement :
+
+- `FLYWAY_URL` : URL JDBC de la base cible
+- `FLYWAY_USER` : utilisateur PostgreSQL
+- `FLYWAY_PASSWORD` : mot de passe PostgreSQL
+
+Exemple :
+
+```bash
+./scripts/run-flyway-docker-image-dev.sh
+```
+
+Le script contient directement les valeurs utilisées en environnement de développement.
 
 ## ⚙️ Exemple de fichier .env
 
@@ -97,6 +120,58 @@ L'API utilise le standard **JWT** avec deux types de tokens :
 - `JWT_SECRET` : Clé secrète pour signer les tokens.
 - `EXPIRATION_ACCESS_TOKEN` : Durée de vie de l'access token (ex. : `15m` pour 15 minutes).
 - `EXPIRATION_REFRESH_TOKEN` : Durée de vie du refresh token (ex. : `7d` pour 7 jours).
+
+### Routes de register
+
+Les inscriptions sont maintenant séparées par type d'utilisateur :
+
+- `POST /public/api/v1/authentication/register/consumer`
+- `POST /public/api/v1/authentication/register/pro`
+- `POST /private/api/v1/authentication/register/admin`
+
+Le contrôleur public reste dédié au login, au refresh token et au logout.
+
+### Routes de login
+
+Les connexions sont également séparées par type d'utilisateur :
+
+- `POST /public/api/v1/authentication/login/consumer`
+- `POST /public/api/v1/authentication/login/pro`
+- `POST /public/api/v1/authentication/login/admin`
+
+Les routes publiques d'authentification gèrent aussi :
+
+- `POST /public/api/v1/authentication/refresh-token`
+- `DELETE /public/api/v1/authentication/logout`
+
+### Statut et vérification des credentials
+
+Le module `authentication` stocke maintenant dans `credentials` :
+
+- `status` : état de vie du compte (`ACTIVE`, `SUSPENDED`)
+- `phone_number` : numéro utilisé pour la connexion SMS et la vérification
+- `email_verified` : vérification manuelle de l'email
+- `phone_verified` : vérification manuelle du numéro de téléphone
+
+Le login refuse les credentials non actifs. Pour l'instant, la vérification d'email ou de téléphone n'utilise pas de provider externe
+(pas de Mail/SMS gateway). Elle est simulée par des routes admin dédiées, ce qui permet de garder le flux fonctionnel et testable :
+
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/activate`
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/suspend`
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/verify-email`
+- `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/verify-phone`
+
+### Route account
+
+L'utilisateur authentifié peut récupérer ses informations de compte via l'identifiant `credentials_id` extrait du JWT :
+
+- `GET /private/api/v1/account/me`
+- `GET /private/api/v1/account/me/pro`
+
+Le middleware JWT injecte cet identifiant dans le `CustomUserDetails`, et le controller le transmet au module `account`.
+Le module `account` ne stocke plus le téléphone: il est relu depuis `credentials` pour composer les réponses.
+La route `/me` renvoie uniquement les informations communes du compte.
+La route `/me/pro` renvoie les informations pro enrichies et est réservée aux comptes `PRO`.
 
 ## 🗃 Infrastructure technique
 

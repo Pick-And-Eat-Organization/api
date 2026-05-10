@@ -19,7 +19,6 @@ public class AccountEntityUnitTest {
           "Doe",
           "John",
           RoleName.CONSUMER,
-          "+33650333125",
           "test@gmail.com",
           "1995-09-04",
           Date.from(Instant.now()),
@@ -32,7 +31,6 @@ public class AccountEntityUnitTest {
           "Stark",
           UUID.randomUUID(),
           LocalDate.parse("1995-08-04"),
-          "+33650121314",
           Instant.now(),
           null,
           RoleName.CONSUMER);

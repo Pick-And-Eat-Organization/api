@@ -9,6 +9,7 @@ import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.infrastructure.model.CredentialsEntity;
 import com.clickandeat.authentication.infrastructure.model.RoleEntity;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.util.Date;
 import java.util.Optional;
@@ -62,10 +63,14 @@ public class CredentialsRepositoryImplUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "john.doe@example.com",
+            "+33601020304",
             "encryptedPass",
             new Role(RoleName.CONSUMER, null),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     CredentialsEntity entity = CredentialsEntity.fromDomain(domain, roleEntity);
 
@@ -80,6 +85,7 @@ public class CredentialsRepositoryImplUnitTest {
     UUID result = repository.save(domain);
 
     assertEquals(id, result);
+    assertEquals("+33601020304", entity.getPhoneNumber());
   }
 
   @Test

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.domain.valueobject.Scope;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,16 +24,24 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000001",
             "hashedPassword",
             new Role(RoleName.ADMIN, scopes),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     assertTrue(adminCredentials.getRole().hasWildcardScope());
     assertTrue(adminCredentials.canAccess("read", "menu"));
     assertTrue(adminCredentials.hasAdminRole());
     assertFalse(adminCredentials.hasConsummerRole());
     assertFalse(adminCredentials.hasProRole());
+    assertTrue(adminCredentials.isActive());
+    assertFalse(adminCredentials.isEmailVerified());
+    assertFalse(adminCredentials.isPhoneVerified());
+    assertEquals("+33600000001", adminCredentials.getPhoneNumber());
 
     adminCredentials.changePassword("newHashedPassword");
 
@@ -52,15 +61,20 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000002",
             "hashedPassword",
             new Role(RoleName.CONSUMER, scopes),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     assertFalse(consumerCredentials.getRole().hasWildcardScope());
     assertTrue(consumerCredentials.canAccess("read", "menu"));
     assertTrue(consumerCredentials.hasConsummerRole());
     assertFalse(consumerCredentials.hasProRole());
     assertFalse(consumerCredentials.hasAdminRole());
+    assertEquals(CredentialsStatus.ACTIVE, consumerCredentials.getStatus());
   }
 
   @Test
@@ -76,15 +90,45 @@ public class CredentialsUnitTest {
         new Credentials(
             UUID.randomUUID(),
             "test@test.com",
+            "+33600000003",
             "hashedPassword",
             new Role(RoleName.PRO, scopes),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     assertFalse(proCredentials.getRole().hasWildcardScope());
     assertFalse(proCredentials.canAccess("create", "order"));
     assertTrue(proCredentials.canAccess("update", "menu"));
     assertTrue(proCredentials.hasProRole());
     assertFalse(proCredentials.hasConsummerRole());
     assertFalse(proCredentials.hasAdminRole());
+  }
+
+  @Test
+  public void credentials_shouldSupportActivationAndVerificationLifecycle() {
+    Credentials credentials =
+        new Credentials(
+            UUID.randomUUID(),
+            "test@test.com",
+            "+33600000004",
+            "hashedPassword",
+            new Role(RoleName.CONSUMER, Set.of()),
+            new Date(),
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
+
+    credentials.suspend();
+    credentials.verifyEmail();
+    credentials.verifyPhone();
+    credentials.activate();
+
+    assertTrue(credentials.isActive());
+    assertTrue(credentials.isEmailVerified());
+    assertTrue(credentials.isPhoneVerified());
+    assertEquals(CredentialsStatus.ACTIVE, credentials.getStatus());
   }
 }

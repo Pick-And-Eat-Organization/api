@@ -1,9 +1,12 @@
 package com.clickandeat.authentication.application.usecase.register;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.clickandeat.authentication.application.exceptions.application.EmailAlreadyUsedException;
@@ -13,6 +16,11 @@ import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.repository.ICredentialsRepository;
 import com.clickandeat.authentication.domain.service.IPasswordService;
 import com.clickandeat.authentication.domain.valueobject.Role;
+import com.clickandeat.shared.account.CreateGenericAccountPort;
+import com.clickandeat.shared.account.CreateGenericAccountRequest;
+import com.clickandeat.shared.account.CreateProAccountPort;
+import com.clickandeat.shared.account.CreateProAccountRequest;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +39,9 @@ public class RegisterUseCaseUnitTest {
 
   private IPasswordService passwordService;
 
+  private CreateGenericAccountPort createGenericAccountPort;
+  private CreateProAccountPort createProAccountPort;
+
   private RegisterCommand getCommand() {
     String dateString = "2025-05-24";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -48,7 +59,14 @@ public class RegisterUseCaseUnitTest {
   void init() {
     this.credentialsRepository = mock(ICredentialsRepository.class);
     this.passwordService = mock(IPasswordService.class);
-    this.registerUseCase = new RegisterUseCase(credentialsRepository, passwordService);
+    this.createGenericAccountPort = mock(CreateGenericAccountPort.class);
+    this.createProAccountPort = mock(CreateProAccountPort.class);
+    this.registerUseCase =
+        new RegisterUseCase(
+            credentialsRepository,
+            passwordService,
+            createGenericAccountPort,
+            createProAccountPort);
   }
 
   @Test
@@ -104,9 +122,79 @@ public class RegisterUseCaseUnitTest {
     UUID credentialsId = UUID.randomUUID();
 
     when(credentialsRepository.save(any(Credentials.class))).thenReturn(credentialsId);
+    when(createGenericAccountPort.createGenericAccount(any(CreateGenericAccountRequest.class)))
+        .thenReturn(1L);
 
     UUID result = registerUseCase.execute(command);
 
     assertEquals(credentialsId, result);
+    verify(credentialsRepository)
+        .save(
+            org.mockito.ArgumentMatchers.argThat(
+                credentials ->
+                    credentials.getEmail().equals(command.email())
+                        && credentials.getPhoneNumber().equals(command.phoneNumber())));
+    verify(createGenericAccountPort)
+        .createGenericAccount(
+            eq(
+                new CreateGenericAccountRequest(
+                    credentialsId,
+                    command.firstName(),
+                    command.lastName(),
+                    command.role().name(),
+                    command.birthDate())));
+  }
+
+  @Test
+  public void register_shouldCreateActiveCredentialsByDefault() {
+    RegisterCommand command = getCommand();
+
+    when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.empty());
+    when(passwordService.hashPassword(command.password())).thenReturn("hashPassword");
+    when(credentialsRepository.save(any(Credentials.class))).thenReturn(UUID.randomUUID());
+
+    registerUseCase.execute(command);
+
+    org.mockito.ArgumentCaptor<Credentials> captor =
+        org.mockito.ArgumentCaptor.forClass(Credentials.class);
+    verify(credentialsRepository).save(captor.capture());
+    Credentials savedCredentials = captor.getValue();
+
+    assertEquals(CredentialsStatus.ACTIVE, savedCredentials.getStatus());
+    assertFalse(savedCredentials.isEmailVerified());
+    assertFalse(savedCredentials.isPhoneVerified());
+    assertEquals(command.phoneNumber(), savedCredentials.getPhoneNumber());
+  }
+
+  @Test
+  public void registerPro_shouldThrowIfRoleIsNotPro() {
+    RegisterCommand command = getCommand();
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registerUseCase.registerPro(
+                new RegisterCommand(
+                    command.email(),
+                    command.password(),
+                    command.firstName(),
+                    command.lastName(),
+                    command.phoneNumber(),
+                    command.birthDate(),
+                    new Role(RoleName.CONSUMER, null)),
+                new CreateProAccountRequest(
+                    command.firstName(),
+                    command.lastName(),
+                    command.birthDate(),
+                    "kb",
+                    "12345678901234",
+                    "legal",
+                    "SARL",
+                    "addr1",
+                    null,
+                    null,
+                    "city",
+                    "75000",
+                    "France")));
   }
 }

@@ -14,16 +14,16 @@ import javax.crypto.SecretKey;
 public class TokenProvider implements ITokenProvider {
 
   private final String secret;
-  private final long accessExpirationMs;
+  private final Duration accessExpirationMs;
 
-  public TokenProvider(String secret, long accessExpirationMs) {
+  public TokenProvider(String secret, Duration accessExpirationMs) {
     this.secret = secret;
     this.accessExpirationMs = accessExpirationMs;
   }
 
   @Override
   public String generateAccessToken(TokenPayload payload) {
-    return buildToken(payload, accessExpirationMs);
+    return buildToken(payload, accessExpirationMs.toMillis());
   }
 
   @Override
@@ -82,7 +82,7 @@ public class TokenProvider implements ITokenProvider {
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
-  private String buildToken(TokenPayload payload, Long expirationMs) {
+  private String buildToken(TokenPayload payload, long expirationMs) {
     Instant now = Instant.now();
     String jti = UUID.randomUUID().toString();
     return Jwts.builder()
@@ -90,7 +90,7 @@ public class TokenProvider implements ITokenProvider {
         .subject(payload.getUserId().toString())
         .claim("role", payload.getRole())
         .issuedAt(Date.from(now))
-        .expiration(Date.from(now.plusSeconds(expirationMs)))
+        .expiration(Date.from(now.plusMillis(expirationMs)))
         .signWith(this.getSigningKey())
         .compact();
   }

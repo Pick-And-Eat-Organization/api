@@ -1,9 +1,7 @@
 package com.clickandeat.api.authentication.controllers;
 
 import com.clickandeat.api.authentication.dto.LoginRequestDto;
-import com.clickandeat.api.authentication.dto.RegisterRequestDto;
 import com.clickandeat.api.authentication.mapper.LoginRequestMapper;
-import com.clickandeat.api.authentication.mapper.RegisterRequestMapper;
 import com.clickandeat.api.authentication.swagger.*;
 import com.clickandeat.api.shared.GenericApiResponse;
 import com.clickandeat.authentication.application.TokenPair;
@@ -11,8 +9,6 @@ import com.clickandeat.authentication.application.usecase.login.ILoginUseCase;
 import com.clickandeat.authentication.application.usecase.login.LoginCommand;
 import com.clickandeat.authentication.application.usecase.logout.ILogoutUseCase;
 import com.clickandeat.authentication.application.usecase.refresh_token.IRefreshUseCase;
-import com.clickandeat.authentication.application.usecase.register.IRegisterUseCase;
-import com.clickandeat.authentication.application.usecase.register.RegisterCommand;
 import com.clickandeat.shared.enums.RoleName;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,105 +26,35 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("public/api/v1/authentication")
 @Tag(
     name = "Authentication (Public)",
-    description = "Public endpoints for user registration and login.")
+    description = "Public endpoints for login, refresh token and logout.")
 public class PublicAuthenticationController {
-
-  private final IRegisterUseCase registerUseCase;
   private final ILoginUseCase loginUseCase;
   private final IRefreshUseCase refreshUseCase;
   private final ILogoutUseCase logoutUseCase;
 
   public PublicAuthenticationController(
-      IRegisterUseCase registerUseCase,
       ILoginUseCase loginUseCase,
       IRefreshUseCase refreshUseCase,
       ILogoutUseCase logoutUseCase) {
-    this.registerUseCase = registerUseCase;
     this.loginUseCase = loginUseCase;
     this.refreshUseCase = refreshUseCase;
     this.logoutUseCase = logoutUseCase;
   }
 
   @Operation(
-      summary = "Register a user",
-      description = "Registers a new user and returns an api response.",
+      summary = "Login a consumer",
+      description = "Authenticate a consumer and return access and refresh tokens.",
       requestBody =
           @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "User registration data",
+              description = "Consumer login data",
               required = true,
               content =
                   @Content(
-                      schema = @Schema(implementation = RegisterRequestDto.class),
-                      examples =
-                          @ExampleObject(
-                              name = "RegisterRequestExample",
-                              summary = "Example registration",
-                              value =
-                                  """
-                {
-                    "email": "example@example.com",
-                    "password": "AstrongPassw0rd!",
-                    "firstName": "John",
-                    "lastName": "Doe",
-                    "phoneNumber": "+33601020304",
-                    "birthDate": "1995-01-01",
-                    "role": "CONSUMER"
-                }
-            """))))
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "User successfully registered",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = RegisterApiResponse.class))),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Invalid request body.",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Email is already in use.",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(
-            responseCode = "500",
-            description = "Internal server error.",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ErrorResponse.class)))
-      })
-  @PostMapping("/register")
-  public ResponseEntity<GenericApiResponse<UUID>> register(
-      @Valid @RequestBody RegisterRequestDto dto) {
-    RegisterCommand command = RegisterRequestMapper.toCommand(dto);
-    this.registerUseCase.execute(command);
-    return ResponseEntity.status(201)
-        .body(new GenericApiResponse<>("Registration completed successfully.", null));
-  }
-
-  @Operation(
-      summary = "Log a consumer",
-      description = "Log a new consumer and returns an api response with tokens.",
-      requestBody =
-          @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Consumer registration data",
-              required = true,
-              content =
-                  @Content(
-                      schema = @Schema(implementation = RegisterRequestDto.class),
+                      schema = @Schema(implementation = LoginRequestDto.class),
                       examples =
                           @ExampleObject(
                               name = "LoginRequestDto",
-                              summary = "Example registration",
+                              summary = "Consumer login example",
                               value =
                                   """
                 {
@@ -176,11 +102,11 @@ public class PublicAuthenticationController {
   }
 
   @Operation(
-      summary = "Log a pro",
-      description = "Log a new pro and returns an api response with tokens.",
+      summary = "Login a pro",
+      description = "Authenticate a pro and return access and refresh tokens.",
       requestBody =
           @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Pro registration data",
+              description = "Pro login data",
               required = true,
               content =
                   @Content(
@@ -188,7 +114,7 @@ public class PublicAuthenticationController {
                       examples =
                           @ExampleObject(
                               name = "LoginRequestDto",
-                              summary = "Example registration",
+                              summary = "Pro login example",
                               value =
                                   """
                           {
@@ -228,7 +154,7 @@ public class PublicAuthenticationController {
                     schema = @Schema(implementation = ErrorResponse.class)))
       })
   @PostMapping("/login/pro")
-  public ResponseEntity<GenericApiResponse<TokenPair>> loginForPRO(
+  public ResponseEntity<GenericApiResponse<TokenPair>> loginForPro(
       @Valid @RequestBody LoginRequestDto dto) {
     LoginCommand command = LoginRequestMapper.toCommand(dto);
     TokenPair token = this.loginUseCase.execute(command, RoleName.PRO);
@@ -236,11 +162,11 @@ public class PublicAuthenticationController {
   }
 
   @Operation(
-      summary = "Log a admin",
-      description = "Log a new admin and returns an api response with tokens.",
+      summary = "Login an admin",
+      description = "Authenticate an admin and return access and refresh tokens.",
       requestBody =
           @io.swagger.v3.oas.annotations.parameters.RequestBody(
-              description = "Admin registration data",
+              description = "Admin login data",
               required = true,
               content =
                   @Content(
@@ -248,7 +174,7 @@ public class PublicAuthenticationController {
                       examples =
                           @ExampleObject(
                               name = "LoginRequestDto",
-                              summary = "Example registration",
+                              summary = "Admin login example",
                               value =
                                   """
                           {

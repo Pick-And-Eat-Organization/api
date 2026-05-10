@@ -14,10 +14,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Table(
-    name = "account",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"phoneNumber"})},
-    indexes = {@Index(name = "idx_account_phoneNumber", columnList = "phoneNumber")})
+    name = "account")
 @Entity()
+@EntityListeners(org.springframework.data.jpa.domain.support.AuditingEntityListener.class)
 public class AccountEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,19 +26,16 @@ public class AccountEntity {
   @Column(name = "credentials_id", nullable = false, updatable = false)
   private UUID credentialsId;
 
-  @Column(name = "firstName", updatable = true, nullable = false)
+  @Column(name = "first_name", updatable = true, nullable = false)
   private String firstName;
 
-  @Column(name = "lastName", updatable = true, nullable = false)
+  @Column(name = "last_name", updatable = true, nullable = false)
   private String lastName;
 
-  @Column(name = "birth_date", updatable = true, nullable = false)
+  @Column(name = "birth_date", updatable = true, nullable = true)
   private LocalDate birthDate;
 
-  @Column(name = "phone_number", updatable = true, nullable = false)
-  private String phoneNumber;
-
-  @Column(name = "created_at", updatable = false, nullable = false)
+  @Column(name = "created_at", updatable = false, nullable = true)
   @CreatedDate
   private Instant createdAt;
 
@@ -61,7 +57,6 @@ public class AccountEntity {
       String lastName,
       UUID credentialsId,
       LocalDate birthDate,
-      String phoneNumber,
       Instant createdAt,
       Instant updatedAt,
       RoleName role) {
@@ -69,7 +64,6 @@ public class AccountEntity {
     this.firstName = firstName;
     this.lastName = lastName;
     this.birthDate = birthDate;
-    this.phoneNumber = phoneNumber;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.roleType = role;
@@ -84,12 +78,11 @@ public class AccountEntity {
         this.lastName,
         this.firstName,
         this.roleType,
-        this.phoneNumber,
         email,
         this.birthDate.toString(),
         Date.from(this.createdAt),
         Objects.isNull(this.updatedAt) ? null : Date.from(this.updatedAt),
-        null);
+        Objects.isNull(this.accountProInformations) ? null : this.accountProInformations.toDomain());
   }
 
   public static AccountEntity fromDomain(Account account, UUID credentialsId) {
@@ -99,7 +92,6 @@ public class AccountEntity {
         account.getFirstName(),
         credentialsId,
         LocalDate.parse(account.getAccountBirthDate().date()),
-        account.getAccountPhoneNumber().phoneNumber(),
         account.getAccountCreatedDate().toInstant(),
         Objects.isNull(account.getAccountUpdatedDate())
             ? null

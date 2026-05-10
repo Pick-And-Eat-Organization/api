@@ -12,14 +12,20 @@ import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 @Tag("functional")
 @Transactional
 public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTest {
   @Autowired private RegisterUseCase registerUseCase;
+  @Autowired private JdbcTemplate jdbcTemplate;
 
   private RegisterCommand getCommand(String email) {
+    return getCommand(email, "+33650333340");
+  }
+
+  private RegisterCommand getCommand(String email, String phoneNumber) {
     String dateString = "2025-05-24";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     return new RegisterCommand(
@@ -27,7 +33,7 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
         "clearPassword",
         "jerome",
         "juda",
-        "+33650333340",
+        phoneNumber,
         LocalDate.parse(dateString, formatter),
         new Role(RoleName.CONSUMER, null));
   }
@@ -37,6 +43,17 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
     RegisterCommand command = getCommand("unique-user@example.com");
     UUID result = registerUseCase.execute(command);
     assertNotNull(result, "Le UUID retourné ne doit pas être null");
+    Integer count =
+        jdbcTemplate.queryForObject(
+            "select count(*) from account where credentials_id = ?", Integer.class, result);
+    assertNotNull(count);
+    assertEquals(1, count);
+    String phoneNumber =
+        jdbcTemplate.queryForObject(
+            "select phone_number from credentials where credentials_id = ?",
+            String.class,
+            result);
+    assertEquals(command.phoneNumber(), phoneNumber);
   }
 
   @Test
@@ -52,7 +69,7 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
   @Test
   void register_shouldReturnDifferentIds_whenRegisteringTwoDifferentUsers() {
     RegisterCommand one = getCommand("user1@example.com");
-    RegisterCommand two = getCommand("user2@example.com");
+    RegisterCommand two = getCommand("user2@example.com", "+33650333341");
 
     UUID id1 = registerUseCase.execute(one);
     UUID id2 = registerUseCase.execute(two);

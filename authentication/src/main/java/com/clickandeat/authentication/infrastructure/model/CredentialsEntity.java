@@ -3,6 +3,7 @@ package com.clickandeat.authentication.infrastructure.model;
 import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.domain.valueobject.Scope;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
@@ -21,14 +23,22 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(
     name = "credentials",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})},
-    indexes = {@Index(name = "idx_credentials_email", columnList = "email")})
+    uniqueConstraints = {
+      @UniqueConstraint(columnNames = {"email"}),
+      @UniqueConstraint(columnNames = {"phone_number"})
+    },
+    indexes = {
+      @Index(name = "idx_credentials_email", columnList = "email"),
+      @Index(name = "idx_credentials_phone_number", columnList = "phone_number")
+    })
 @Entity()
 @EntityListeners(AuditingEntityListener.class)
 public class CredentialsEntity {
@@ -43,6 +53,9 @@ public class CredentialsEntity {
   @Column(name = "password", updatable = true, nullable = false, length = 200)
   private String password;
 
+  @Column(name = "phone_number", updatable = true, nullable = false, length = 20)
+  private String phoneNumber;
+
   @Column(name = "created_at", updatable = false, nullable = false)
   @CreatedDate
   private Instant createdAt;
@@ -55,21 +68,40 @@ public class CredentialsEntity {
   @JoinColumn(name = "role_id")
   private RoleEntity roleEntity;
 
+  @Enumerated(jakarta.persistence.EnumType.STRING)
+  @JdbcType(PostgreSQLEnumJdbcType.class)
+  @Column(name = "status", nullable = false)
+  private CredentialsStatus status;
+
+  @Column(name = "email_verified", nullable = false)
+  private boolean emailVerified;
+
+  @Column(name = "phone_verified", nullable = false)
+  private boolean phoneVerified;
+
   public CredentialsEntity() {}
 
   public CredentialsEntity(
       UUID id,
       String email,
+      String phoneNumber,
       String password,
       Instant createdAt,
       Instant updatedAt,
-      RoleEntity roleEntity) {
+      RoleEntity roleEntity,
+      CredentialsStatus status,
+      boolean emailVerified,
+      boolean phoneVerified) {
     this.id = id;
     this.email = email;
+    this.phoneNumber = phoneNumber;
     this.password = password;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.roleEntity = roleEntity;
+    this.status = status;
+    this.emailVerified = emailVerified;
+    this.phoneVerified = phoneVerified;
   }
 
   public static CredentialsEntity fromDomain(Credentials credentials, RoleEntity roleEntity) {
@@ -78,10 +110,14 @@ public class CredentialsEntity {
     return new CredentialsEntity(
         credentials.getId(),
         credentials.getEmail(),
+        credentials.getPhoneNumber(),
         credentials.getPassword(),
         credentials.getCreatedAt().toInstant(),
         updatedAt,
-        roleEntity);
+        roleEntity,
+        credentials.getStatus(),
+        credentials.isEmailVerified(),
+        credentials.isPhoneVerified());
   }
 
   public Credentials toDomain() {
@@ -96,10 +132,14 @@ public class CredentialsEntity {
     return new Credentials(
         id,
         email,
+        phoneNumber,
         password,
         domainRole,
         Date.from(createdAt),
-        updatedAt != null ? Date.from(updatedAt) : null);
+        updatedAt != null ? Date.from(updatedAt) : null,
+        status,
+        emailVerified,
+        phoneVerified);
   }
 
   public UUID getId() {
@@ -114,6 +154,10 @@ public class CredentialsEntity {
     return password;
   }
 
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
   public Instant getCreatedAt() {
     return createdAt;
   }
@@ -124,5 +168,17 @@ public class CredentialsEntity {
 
   public RoleEntity getRoleEntity() {
     return roleEntity;
+  }
+
+  public CredentialsStatus getStatus() {
+    return status;
+  }
+
+  public boolean isEmailVerified() {
+    return emailVerified;
+  }
+
+  public boolean isPhoneVerified() {
+    return phoneVerified;
   }
 }
