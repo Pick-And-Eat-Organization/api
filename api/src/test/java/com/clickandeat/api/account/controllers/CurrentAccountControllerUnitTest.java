@@ -16,9 +16,11 @@ class CurrentAccountControllerUnitTest {
 
   @Test
   void currentAccountControllerShouldExposePrivateRouteAndSwaggerMetadata() throws Exception {
-    RequestMapping requestMapping = CurrentAccountController.class.getAnnotation(RequestMapping.class);
-    Method method = CurrentAccountController.class.getDeclaredMethod(
-        "getCurrentAccount", com.clickandeat.api.config.filter.CustomUserDetails.class);
+    RequestMapping requestMapping =
+        CurrentAccountController.class.getAnnotation(RequestMapping.class);
+    Method method =
+        CurrentAccountController.class.getDeclaredMethod(
+            "getCurrentAccount", com.clickandeat.api.config.filter.CustomUserDetails.class);
     Operation operation = method.getAnnotation(Operation.class);
     GetMapping getMapping = method.getAnnotation(GetMapping.class);
 

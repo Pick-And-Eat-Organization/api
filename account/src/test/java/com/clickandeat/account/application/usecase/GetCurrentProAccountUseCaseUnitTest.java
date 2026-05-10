@@ -52,7 +52,8 @@ class GetCurrentProAccountUseCaseUnitTest {
                 "75001",
                 "France"));
 
-    when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.of(account));
+    when(accountRepository.findAccountByCredentialsId(credentialsId))
+        .thenReturn(Optional.of(account));
     when(credentialsPort.getCurrentCredentials(credentialsId))
         .thenReturn(new CurrentCredentialsResponse("+33601020304"));
 

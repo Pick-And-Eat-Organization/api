@@ -45,8 +45,7 @@ public class AccountProInformationsUnitTest {
   public void shouldConvertToEntityClass() {
     AccountProInformationsEntity accountProInformations =
         AccountProInformationsEntity.fromDomain(
-            PRO_ACCOUNT_INFOS,
-            AccountEntity.fromDomain(ACCOUNT_DOMAIN, UUID.randomUUID()));
+            PRO_ACCOUNT_INFOS, AccountEntity.fromDomain(ACCOUNT_DOMAIN, UUID.randomUUID()));
 
     assertEquals(1L, accountProInformations.toDomain().getId());
 

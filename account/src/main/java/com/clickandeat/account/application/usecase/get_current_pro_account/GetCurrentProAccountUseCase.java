@@ -18,8 +18,7 @@ public class GetCurrentProAccountUseCase implements GetCurrentProAccountPort {
   private final GetCurrentCredentialsPort getCurrentCredentialsPort;
 
   public GetCurrentProAccountUseCase(
-      IAccountRepository accountRepository,
-      GetCurrentCredentialsPort getCurrentCredentialsPort) {
+      IAccountRepository accountRepository, GetCurrentCredentialsPort getCurrentCredentialsPort) {
     this.accountRepository = accountRepository;
     this.getCurrentCredentialsPort = getCurrentCredentialsPort;
   }
@@ -41,8 +40,12 @@ public class GetCurrentProAccountUseCase implements GetCurrentProAccountPort {
         account.getLastName(),
         phoneNumber,
         java.time.LocalDate.parse(account.getAccountBirthDate().date()),
-        account.getAccountCreatedDate() == null ? null : account.getAccountCreatedDate().toInstant(),
-        account.getAccountUpdatedDate() == null ? null : account.getAccountUpdatedDate().toInstant(),
+        account.getAccountCreatedDate() == null
+            ? null
+            : account.getAccountCreatedDate().toInstant(),
+        account.getAccountUpdatedDate() == null
+            ? null
+            : account.getAccountUpdatedDate().toInstant(),
         toProInformationsResponse(account.getAccountProInformations()));
   }
 

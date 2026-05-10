@@ -50,8 +50,7 @@ public class AdminCredentialsController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
       })
   @PostMapping("/{credentialsId}/activate")
-  public ResponseEntity<GenericApiResponse<String>> activate(
-      @PathVariable UUID credentialsId) {
+  public ResponseEntity<GenericApiResponse<String>> activate(@PathVariable UUID credentialsId) {
     this.credentialsManagementUseCase.activate(credentialsId);
     return ResponseEntity.ok(new GenericApiResponse<>("Credentials activated successfully.", null));
   }
@@ -77,8 +76,7 @@ public class AdminCredentialsController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
       })
   @PostMapping("/{credentialsId}/suspend")
-  public ResponseEntity<GenericApiResponse<String>> suspend(
-      @PathVariable UUID credentialsId) {
+  public ResponseEntity<GenericApiResponse<String>> suspend(@PathVariable UUID credentialsId) {
     this.credentialsManagementUseCase.suspend(credentialsId);
     return ResponseEntity.ok(new GenericApiResponse<>("Credentials suspended successfully.", null));
   }
@@ -104,8 +102,7 @@ public class AdminCredentialsController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
       })
   @PostMapping("/{credentialsId}/verify-email")
-  public ResponseEntity<GenericApiResponse<String>> verifyEmail(
-      @PathVariable UUID credentialsId) {
+  public ResponseEntity<GenericApiResponse<String>> verifyEmail(@PathVariable UUID credentialsId) {
     this.credentialsManagementUseCase.verifyEmail(credentialsId);
     return ResponseEntity.ok(new GenericApiResponse<>("Email verified successfully.", null));
   }
@@ -131,8 +128,7 @@ public class AdminCredentialsController {
             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
       })
   @PostMapping("/{credentialsId}/verify-phone")
-  public ResponseEntity<GenericApiResponse<String>> verifyPhone(
-      @PathVariable UUID credentialsId) {
+  public ResponseEntity<GenericApiResponse<String>> verifyPhone(@PathVariable UUID credentialsId) {
     this.credentialsManagementUseCase.verifyPhone(credentialsId);
     return ResponseEntity.ok(new GenericApiResponse<>("Phone verified successfully.", null));
   }

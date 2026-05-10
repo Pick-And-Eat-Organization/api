@@ -7,8 +7,8 @@ import static org.mockito.Mockito.*;
 
 import com.clickandeat.authentication.application.ITokenRepository;
 import com.clickandeat.authentication.application.TokenPair;
-import com.clickandeat.authentication.application.exceptions.application.EmailNotFoundException;
 import com.clickandeat.authentication.application.exceptions.application.CredentialsNotActiveException;
+import com.clickandeat.authentication.application.exceptions.application.EmailNotFoundException;
 import com.clickandeat.authentication.application.exceptions.application.PasswordNotMatchException;
 import com.clickandeat.authentication.application.exceptions.application.RoleMismatchException;
 import com.clickandeat.authentication.domain.Credentials;

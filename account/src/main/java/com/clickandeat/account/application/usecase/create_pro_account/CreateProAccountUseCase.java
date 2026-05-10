@@ -29,7 +29,8 @@ public class CreateProAccountUseCase implements CreateProAccountPort {
   public Long createProAccount(UUID credentialsId, CreateProAccountRequest request) {
     CreateProAccountCommand command = toCommand(credentialsId, request);
     Account savedAccount = this.accountCreationService.createAccount(command.baseCommand());
-    this.proAccountRepository.saveAccountProInformations(convertToDomain(command, savedAccount.getId()));
+    this.proAccountRepository.saveAccountProInformations(
+        convertToDomain(command, savedAccount.getId()));
     return savedAccount.getId();
   }
 
@@ -37,10 +38,10 @@ public class CreateProAccountUseCase implements CreateProAccountPort {
     return new CreateProAccountCommand(
         new CreateGenericAccountCommand(
             credentialsId,
-        request.firstName(),
-        request.lastName(),
-        RoleName.PRO,
-        request.accountBirthDate().toString()),
+            request.firstName(),
+            request.lastName(),
+            RoleName.PRO,
+            request.accountBirthDate().toString()),
         request.kbisRef(),
         request.siret(),
         request.legalName(),

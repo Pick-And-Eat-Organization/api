@@ -33,6 +33,8 @@ public class AccountRepositoryImpl implements IAccountRepository {
 
   @Override
   public Optional<Account> findAccountByCredentialsId(UUID credentialsId) {
-    return this.accountJpaRepository.findByCredentialsId(credentialsId).map(entity -> entity.toDomain(null));
+    return this.accountJpaRepository
+        .findByCredentialsId(credentialsId)
+        .map(entity -> entity.toDomain(null));
   }
 }

@@ -8,7 +8,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(
-    basePackages = {"com.clickandeat.api", "com.clickandeat.authentication", "com.clickandeat.account"})
+    basePackages = {
+      "com.clickandeat.api",
+      "com.clickandeat.authentication",
+      "com.clickandeat.account"
+    })
 @EnableJpaRepositories(
     basePackages = {
       "com.clickandeat.authentication.infrastructure.repository",

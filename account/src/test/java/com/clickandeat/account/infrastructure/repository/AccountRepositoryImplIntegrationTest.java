@@ -3,9 +3,9 @@ package com.clickandeat.account.infrastructure.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.account.infrastructure.database.AbstractDatabaseContainersTest;
 import com.clickandeat.account.infrastructure.model.AccountEntity;
-import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.Instant;
 import java.time.LocalDate;

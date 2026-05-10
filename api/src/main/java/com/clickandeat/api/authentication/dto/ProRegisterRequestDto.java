@@ -68,6 +68,7 @@ public class ProRegisterRequestDto {
 
   @Schema(description = "Address line 2", example = "Batiment A")
   private final String address2;
+
   @Schema(description = "Address line 3", example = "Etage 1")
   private final String address3;
 

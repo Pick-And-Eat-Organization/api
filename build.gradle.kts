@@ -69,6 +69,18 @@ subprojects {
 	plugins.withId("java") {
 		val coverageLimit: BigDecimal =
 			(project.findProperty("limit") as String?)?.toBigDecimalOrNull() ?: BigDecimal("0.8")
+		val jacocoExcludedPatterns =
+			listOf(
+				"**/*Request.*",
+				"**/*Response.*",
+				"**/*Port.*",
+				"**/*Dto.*",
+				"**/*Command.*",
+				"**/*Payload.*",
+				"**/config/test/**",
+				"**/enums/**",
+				"**/exceptions/**"
+			)
 
 		val unitTest: TaskProvider<Test> = tasks.register("unitTest", Test::class) {
 			useJUnitPlatform {
@@ -85,6 +97,7 @@ subprojects {
 			classDirectories.setFrom(
 				layout.files(layout.buildDirectory.dir("classes/java/main")).asFileTree.matching {
 					exclude("**/generated/**")
+					exclude(jacocoExcludedPatterns)
 				}
 			)
 			sourceDirectories.setFrom(files("src/main/java"))
@@ -104,6 +117,7 @@ subprojects {
 				classDirectories.setFrom(
 					layout.files(layout.buildDirectory.dir("classes/java/main")).asFileTree.matching {
 						exclude("**/generated/**")
+						exclude(jacocoExcludedPatterns)
 					}
 				)
 				sourceDirectories.setFrom(files("src/main/java"))
@@ -158,5 +172,4 @@ tasks.register<DefaultTask>("aggregateJavadoc") {
         }
     }
 }
-
 

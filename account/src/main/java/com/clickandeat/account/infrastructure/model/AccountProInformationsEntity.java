@@ -99,8 +99,7 @@ public class AccountProInformationsEntity {
   }
 
   public static AccountProInformationsEntity fromDomain(
-      AccountProInformations accountProInformations,
-      AccountEntity accountEntity) {
+      AccountProInformations accountProInformations, AccountEntity accountEntity) {
     return new AccountProInformationsEntity(
         null,
         accountEntity,

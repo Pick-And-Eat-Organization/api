@@ -21,8 +21,7 @@ class AdminCredentialsControllerUnitTest {
 
     assertNotNull(requestMapping);
     assertArrayEquals(
-        new String[] {"private/api/v1/authentication/admin/credentials"},
-        requestMapping.value());
+        new String[] {"private/api/v1/authentication/admin/credentials"}, requestMapping.value());
 
     Method activate =
         AdminCredentialsController.class.getDeclaredMethod("activate", java.util.UUID.class);

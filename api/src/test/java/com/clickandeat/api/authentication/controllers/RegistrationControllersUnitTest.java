@@ -22,7 +22,8 @@ class RegistrationControllersUnitTest {
     try {
       operation =
           ConsumerRegistrationController.class
-              .getDeclaredMethod("register", com.clickandeat.api.authentication.dto.RegisterRequestDto.class)
+              .getDeclaredMethod(
+                  "register", com.clickandeat.api.authentication.dto.RegisterRequestDto.class)
               .getAnnotation(Operation.class);
     } catch (NoSuchMethodException exception) {
       throw new IllegalStateException(exception);
@@ -37,7 +38,8 @@ class RegistrationControllersUnitTest {
 
   @Test
   void proRegistrationControllerShouldExposePublicRouteAndSwaggerMetadata() {
-    RequestMapping requestMapping = ProRegistrationController.class.getAnnotation(RequestMapping.class);
+    RequestMapping requestMapping =
+        ProRegistrationController.class.getAnnotation(RequestMapping.class);
     Operation operation;
     try {
       operation =
@@ -58,7 +60,8 @@ class RegistrationControllersUnitTest {
 
   @Test
   void adminRegistrationControllerShouldExposePrivateRouteAndRequireAdminRole() throws Exception {
-    RequestMapping requestMapping = AdminRegistrationController.class.getAnnotation(RequestMapping.class);
+    RequestMapping requestMapping =
+        AdminRegistrationController.class.getAnnotation(RequestMapping.class);
     Method registerMethod =
         AdminRegistrationController.class.getDeclaredMethod(
             "register", com.clickandeat.api.authentication.dto.RegisterRequestDto.class);

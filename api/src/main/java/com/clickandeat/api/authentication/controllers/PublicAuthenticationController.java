@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,9 +32,7 @@ public class PublicAuthenticationController {
   private final ILogoutUseCase logoutUseCase;
 
   public PublicAuthenticationController(
-      ILoginUseCase loginUseCase,
-      IRefreshUseCase refreshUseCase,
-      ILogoutUseCase logoutUseCase) {
+      ILoginUseCase loginUseCase, IRefreshUseCase refreshUseCase, ILogoutUseCase logoutUseCase) {
     this.loginUseCase = loginUseCase;
     this.refreshUseCase = refreshUseCase;
     this.logoutUseCase = logoutUseCase;

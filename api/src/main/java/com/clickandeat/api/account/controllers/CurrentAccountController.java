@@ -37,29 +37,37 @@ public class CurrentAccountController {
         @ApiResponse(
             responseCode = "200",
             description = "Account successfully retrieved",
-            content =
-                @Content(schema = @Schema(implementation = CurrentAccountApiResponse.class))),
+            content = @Content(schema = @Schema(implementation = CurrentAccountApiResponse.class))),
         @ApiResponse(
             responseCode = "401",
             description = "Missing or invalid authentication.",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
         @ApiResponse(
             responseCode = "404",
             description = "Account not found.",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class))),
         @ApiResponse(
             responseCode = "500",
             description = "Internal server error.",
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = com.clickandeat.api.authentication.swagger.ErrorResponse.class)))
+                    schema =
+                        @Schema(
+                            implementation =
+                                com.clickandeat.api.authentication.swagger.ErrorResponse.class)))
       })
   @GetMapping("/me")
   public ResponseEntity<GenericApiResponse<CurrentAccountResponse>> getCurrentAccount(

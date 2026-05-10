@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -41,16 +42,24 @@ public class RefreshTokenUseCaseFunctionalTest extends AbstractDatabaseContainer
 
   TokenPair token;
 
+  private String uniqueEmail() {
+    return "test-refresh-" + UUID.randomUUID() + "@test.com";
+  }
+
+  private String uniquePhoneNumber() {
+    return "+336" + String.format("%08d", ThreadLocalRandom.current().nextInt(0, 100_000_000));
+  }
+
   public TokenPair createCredentials() {
     String dateString = "2025-05-24";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     RegisterCommand command =
         new RegisterCommand(
-            "test-refresh@test.com",
+            uniqueEmail(),
             "MotDePasseTest06?",
             "john",
             "doe",
-            "+33650333340",
+            uniquePhoneNumber(),
             LocalDate.parse(dateString, formatter),
             new Role(RoleName.CONSUMER, null));
     this.registerUseCase.execute(command);

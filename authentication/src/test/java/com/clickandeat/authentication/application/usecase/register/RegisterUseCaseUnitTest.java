@@ -63,10 +63,7 @@ public class RegisterUseCaseUnitTest {
     this.createProAccountPort = mock(CreateProAccountPort.class);
     this.registerUseCase =
         new RegisterUseCase(
-            credentialsRepository,
-            passwordService,
-            createGenericAccountPort,
-            createProAccountPort);
+            credentialsRepository, passwordService, createGenericAccountPort, createProAccountPort);
   }
 
   @Test

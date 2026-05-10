@@ -9,6 +9,7 @@ import com.clickandeat.shared.enums.RoleName;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,16 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
   @Autowired private RegisterUseCase registerUseCase;
   @Autowired private JdbcTemplate jdbcTemplate;
 
+  private String uniqueEmail(String prefix) {
+    return prefix + "-" + UUID.randomUUID() + "@example.com";
+  }
+
+  private String uniquePhoneNumber() {
+    return "+336" + String.format("%08d", ThreadLocalRandom.current().nextInt(0, 100_000_000));
+  }
+
   private RegisterCommand getCommand(String email) {
-    return getCommand(email, "+33650333340");
+    return getCommand(email, uniquePhoneNumber());
   }
 
   private RegisterCommand getCommand(String email, String phoneNumber) {
@@ -40,7 +49,7 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
 
   @Test
   void register_shouldSucceed_whenEmailIsUnique() {
-    RegisterCommand command = getCommand("unique-user@example.com");
+    RegisterCommand command = getCommand(uniqueEmail("unique-user"));
     UUID result = registerUseCase.execute(command);
     assertNotNull(result, "Le UUID retourné ne doit pas être null");
     Integer count =
@@ -50,15 +59,13 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
     assertEquals(1, count);
     String phoneNumber =
         jdbcTemplate.queryForObject(
-            "select phone_number from credentials where credentials_id = ?",
-            String.class,
-            result);
+            "select phone_number from credentials where credentials_id = ?", String.class, result);
     assertEquals(command.phoneNumber(), phoneNumber);
   }
 
   @Test
   void register_shouldThrowEmailAlreadyUsedException_whenEmailAlreadyExists() {
-    String email = "duplicate@example.com";
+    String email = uniqueEmail("duplicate");
     RegisterCommand first = getCommand(email);
     registerUseCase.execute(first);
 
@@ -68,8 +75,8 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
 
   @Test
   void register_shouldReturnDifferentIds_whenRegisteringTwoDifferentUsers() {
-    RegisterCommand one = getCommand("user1@example.com");
-    RegisterCommand two = getCommand("user2@example.com", "+33650333341");
+    RegisterCommand one = getCommand(uniqueEmail("user1"));
+    RegisterCommand two = getCommand(uniqueEmail("user2"));
 
     UUID id1 = registerUseCase.execute(one);
     UUID id2 = registerUseCase.execute(two);

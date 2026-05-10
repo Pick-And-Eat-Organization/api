@@ -10,8 +10,8 @@ import com.clickandeat.account.application.usecase.get_current_account.GetCurren
 import com.clickandeat.account.domain.account.Account;
 import com.clickandeat.account.domain.repository.IAccountRepository;
 import com.clickandeat.shared.account.CurrentAccountResponse;
-import com.clickandeat.shared.account.GetCurrentCredentialsPort;
 import com.clickandeat.shared.account.CurrentCredentialsResponse;
+import com.clickandeat.shared.account.GetCurrentCredentialsPort;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.Instant;
 import java.util.Date;
@@ -25,7 +25,8 @@ class GetCurrentAccountUseCaseUnitTest {
   void shouldReturnCurrentAccountResponse() {
     IAccountRepository accountRepository = mock(IAccountRepository.class);
     GetCurrentCredentialsPort credentialsPort = mock(GetCurrentCredentialsPort.class);
-    GetCurrentAccountUseCase useCase = new GetCurrentAccountUseCase(accountRepository, credentialsPort);
+    GetCurrentAccountUseCase useCase =
+        new GetCurrentAccountUseCase(accountRepository, credentialsPort);
     UUID credentialsId = UUID.randomUUID();
     Account account =
         new Account(
@@ -39,7 +40,8 @@ class GetCurrentAccountUseCaseUnitTest {
             Date.from(Instant.parse("2025-01-02T12:00:00Z")),
             null);
 
-    when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.of(account));
+    when(accountRepository.findAccountByCredentialsId(credentialsId))
+        .thenReturn(Optional.of(account));
     when(credentialsPort.getCurrentCredentials(credentialsId))
         .thenReturn(new CurrentCredentialsResponse("+33601020304"));
 
@@ -57,7 +59,8 @@ class GetCurrentAccountUseCaseUnitTest {
   void shouldThrowWhenAccountDoesNotExist() {
     IAccountRepository accountRepository = mock(IAccountRepository.class);
     GetCurrentCredentialsPort credentialsPort = mock(GetCurrentCredentialsPort.class);
-    GetCurrentAccountUseCase useCase = new GetCurrentAccountUseCase(accountRepository, credentialsPort);
+    GetCurrentAccountUseCase useCase =
+        new GetCurrentAccountUseCase(accountRepository, credentialsPort);
     UUID credentialsId = UUID.randomUUID();
 
     when(accountRepository.findAccountByCredentialsId(credentialsId)).thenReturn(Optional.empty());
