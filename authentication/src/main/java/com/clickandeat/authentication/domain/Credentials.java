@@ -18,32 +18,6 @@ public class Credentials {
   private boolean phoneVerified;
 
   public Credentials(
-      UUID id, String email, String password, Role role, Date createdAt, Date updatedAt) {
-    this(
-        id,
-        email,
-        null,
-        password,
-        role,
-        createdAt,
-        updatedAt,
-        CredentialsStatus.ACTIVE,
-        false,
-        false);
-  }
-
-  public Credentials(
-      UUID id,
-      String email,
-      String phoneNumber,
-      String password,
-      Role role,
-      Date createdAt,
-      Date updatedAt) {
-    this(id, email, phoneNumber, password, role, createdAt, updatedAt, CredentialsStatus.ACTIVE, false, false);
-  }
-
-  public Credentials(
       UUID id,
       String email,
       String phoneNumber,

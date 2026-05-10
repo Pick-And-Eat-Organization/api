@@ -7,6 +7,7 @@ import com.clickandeat.authentication.application.exceptions.application.Credent
 import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.repository.ICredentialsRepository;
 import com.clickandeat.authentication.domain.valueobject.Role;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.util.Date;
 import java.util.Optional;
@@ -38,7 +39,10 @@ class CredentialsManagementUseCaseUnitTest {
             "hashed",
             new Role(RoleName.CONSUMER, null),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 
@@ -59,7 +63,10 @@ class CredentialsManagementUseCaseUnitTest {
             "hashed",
             new Role(RoleName.CONSUMER, null),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 
@@ -80,7 +87,10 @@ class CredentialsManagementUseCaseUnitTest {
             "hashed",
             new Role(RoleName.CONSUMER, null),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 
@@ -101,7 +111,10 @@ class CredentialsManagementUseCaseUnitTest {
             "hashed",
             new Role(RoleName.CONSUMER, null),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     when(this.credentialsRepository.findByUserId(credentialsId.toString()))
         .thenReturn(Optional.of(credentials));
 

@@ -10,6 +10,7 @@ import com.clickandeat.shared.account.CreateGenericAccountPort;
 import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import com.clickandeat.shared.account.CreateProAccountPort;
 import com.clickandeat.shared.account.CreateProAccountRequest;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -101,7 +102,10 @@ public class RegisterUseCase implements IRegisterUseCase {
         hashedPassword,
         command.role(),
         new Date(),
-        null);
+        null,
+        CredentialsStatus.ACTIVE,
+        false,
+        false);
   }
 
   private UUID persistCredentials(Credentials credentials) {

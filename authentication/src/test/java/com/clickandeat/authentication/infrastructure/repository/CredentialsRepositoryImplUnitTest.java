@@ -9,6 +9,7 @@ import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.infrastructure.model.CredentialsEntity;
 import com.clickandeat.authentication.infrastructure.model.RoleEntity;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.util.Date;
 import java.util.Optional;
@@ -66,7 +67,10 @@ public class CredentialsRepositoryImplUnitTest {
             "encryptedPass",
             new Role(RoleName.CONSUMER, null),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     CredentialsEntity entity = CredentialsEntity.fromDomain(domain, roleEntity);
 

@@ -10,6 +10,7 @@ import com.clickandeat.authentication.domain.service.IPasswordService;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.infrastructure.database.AbstractDatabaseContainersTest;
 import com.clickandeat.authentication.infrastructure.repository.CredentialsEntityJPARepository;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import java.time.Instant;
 import java.util.Date;
@@ -40,10 +41,14 @@ class UpdatePasswordUseCaseFunctionalTest extends AbstractDatabaseContainersTest
         new Credentials(
             null,
             "test-update-password@test.fr",
+            "+33601020350",
             this.passwordService.hashPassword(OLD_PASSWORD),
             new Role(RoleName.CONSUMER, null),
             Date.from(Instant.now()),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     existingUserId = this.credentialsRepository.save(credentials);
   }

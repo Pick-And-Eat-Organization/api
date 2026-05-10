@@ -30,7 +30,17 @@ class CredentialsEntityUnitTest {
 
     Role role = new Role(RoleName.CONSUMER, scopes);
     Credentials domainWithPhone =
-        new Credentials(id, email, phoneNumber, password, role, createdAt, updatedAt);
+        new Credentials(
+            id,
+            email,
+            phoneNumber,
+            password,
+            role,
+            createdAt,
+            updatedAt,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     RoleEntity roleEntity = mock(RoleEntity.class);
     when(roleEntity.getId()).thenReturn(2);
     when(roleEntity.getName()).thenReturn("CONSUMER");
@@ -59,7 +69,17 @@ class CredentialsEntityUnitTest {
 
     Role role = new Role(RoleName.ADMIN, Set.of());
     Credentials domainWithPhone =
-        new Credentials(id, email, "+33601020305", password, role, createdAt, null);
+        new Credentials(
+            id,
+            email,
+            "+33601020305",
+            password,
+            role,
+            createdAt,
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     RoleEntity roleEntity = mock(RoleEntity.class);
     when(roleEntity.getId()).thenReturn(1);

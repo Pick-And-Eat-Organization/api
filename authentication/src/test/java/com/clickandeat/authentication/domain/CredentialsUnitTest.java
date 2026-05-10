@@ -28,7 +28,10 @@ public class CredentialsUnitTest {
             "hashedPassword",
             new Role(RoleName.ADMIN, scopes),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     assertTrue(adminCredentials.getRole().hasWildcardScope());
     assertTrue(adminCredentials.canAccess("read", "menu"));
@@ -62,7 +65,10 @@ public class CredentialsUnitTest {
             "hashedPassword",
             new Role(RoleName.CONSUMER, scopes),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     assertFalse(consumerCredentials.getRole().hasWildcardScope());
     assertTrue(consumerCredentials.canAccess("read", "menu"));
     assertTrue(consumerCredentials.hasConsummerRole());
@@ -88,7 +94,10 @@ public class CredentialsUnitTest {
             "hashedPassword",
             new Role(RoleName.PRO, scopes),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
     assertFalse(proCredentials.getRole().hasWildcardScope());
     assertFalse(proCredentials.canAccess("create", "order"));
     assertTrue(proCredentials.canAccess("update", "menu"));
@@ -107,7 +116,10 @@ public class CredentialsUnitTest {
             "hashedPassword",
             new Role(RoleName.CONSUMER, Set.of()),
             new Date(),
-            null);
+            null,
+            CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     credentials.suspend();
     credentials.verifyEmail();

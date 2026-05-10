@@ -34,7 +34,17 @@ public class CredentialsRepositoryImplIntegrationTest extends AbstractDatabaseCo
     Role role = new Role(roleName, Set.of(new Scope("read", "menu"))); // scopes inutilisés en save
 
     Credentials credentials =
-        new Credentials(null, email, phoneNumber, password, role, new Date(), null);
+        new Credentials(
+            null,
+            email,
+            phoneNumber,
+            password,
+            role,
+            new Date(),
+            null,
+            com.clickandeat.shared.enums.CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     UUID id = credentialsRepository.save(credentials);
     Optional<Credentials> fromDb = credentialsRepository.findByEmail(email);
@@ -60,7 +70,17 @@ public class CredentialsRepositoryImplIntegrationTest extends AbstractDatabaseCo
     Role role = new Role(roleName, Set.of(new Scope("read", "menu"))); // scopes inutilisés en save
 
     Credentials credentials =
-        new Credentials(null, email, phoneNumber, password, role, new Date(), null);
+        new Credentials(
+            null,
+            email,
+            phoneNumber,
+            password,
+            role,
+            new Date(),
+            null,
+            com.clickandeat.shared.enums.CredentialsStatus.ACTIVE,
+            false,
+            false);
 
     UUID id = credentialsRepository.save(credentials);
     Optional<Credentials> fromDb = credentialsRepository.findByUserId(id.toString());

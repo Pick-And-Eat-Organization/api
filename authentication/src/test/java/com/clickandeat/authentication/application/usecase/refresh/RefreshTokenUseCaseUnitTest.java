@@ -13,6 +13,7 @@ import com.clickandeat.authentication.application.usecase.refresh_token.RefreshT
 import com.clickandeat.authentication.domain.Credentials;
 import com.clickandeat.authentication.domain.repository.ICredentialsRepository;
 import com.clickandeat.authentication.domain.valueobject.Role;
+import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
 import com.clickandeat.shared.token.TokenService;
 import java.time.Duration;
@@ -99,10 +100,14 @@ public class RefreshTokenUseCaseUnitTest {
     return new Credentials(
         UUID.randomUUID(),
         "test@test.com",
+        "+33601020314",
         "A.Hefjizie99",
         new Role(RoleName.CONSUMER, null),
         Date.from(Instant.now()),
-        null);
+        null,
+        CredentialsStatus.ACTIVE,
+        false,
+        false);
   }
 
   @Test
