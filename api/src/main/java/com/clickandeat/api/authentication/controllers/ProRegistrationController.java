@@ -51,9 +51,13 @@ public class ProRegistrationController {
   public ResponseEntity<GenericApiResponse<UUID>> register(
       @Valid @RequestBody ProRegisterRequestDto dto) {
     RegisterCommand command = ProRegisterRequestMapper.toRegisterCommand(dto);
-    this.registerUseCase.registerPro(
+    UUID credentialsId =
+        this.registerUseCase.registerPro(
         command, ProRegisterRequestMapper.toCreateProAccountRequest(dto));
     return ResponseEntity.status(201)
-        .body(new GenericApiResponse<>("Registration completed successfully.", null));
+        .body(
+            new GenericApiResponse<>(
+                "Registration completed successfully. Check your email and SMS to verify your account.",
+                credentialsId));
   }
 }

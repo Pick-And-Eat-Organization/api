@@ -11,7 +11,9 @@ java {
 
 dependencies {
 	api(project(":shared"))
+	implementation(project(":notifications"))
 	testImplementation(project(":account"))
+	testImplementation(project(":notifications"))
 	testImplementation(project(":migrations"))
 	testImplementation("org.flywaydb:flyway-core:11.10.4")
 	testRuntimeOnly("org.flywaydb:flyway-database-postgresql:11.10.4")

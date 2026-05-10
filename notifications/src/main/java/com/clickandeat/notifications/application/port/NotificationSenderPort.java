@@ -1,7 +1,7 @@
 package com.clickandeat.notifications.application.port;
 
-import com.clickandeat.notifications.domain.NotificationChannel;
+import com.clickandeat.shared.verification.VerificationChannel;
 
 public interface NotificationSenderPort {
-  void send(NotificationChannel channel, String recipient, String subject, String content);
+  void send(VerificationChannel channel, String recipient, String subject, String content);
 }

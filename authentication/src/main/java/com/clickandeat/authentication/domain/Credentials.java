@@ -116,6 +116,13 @@ public class Credentials {
     this.updatedAt = new Date();
   }
 
+  public void completeVerificationIfPossible() {
+    if (this.status == CredentialsStatus.PENDING && this.emailVerified && this.phoneVerified) {
+      this.status = CredentialsStatus.ACTIVE;
+      this.updatedAt = new Date();
+    }
+  }
+
   public void changePassword(String password) {
     this.password = password;
     this.updatedAt = new Date();

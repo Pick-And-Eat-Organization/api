@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Tag("functional")
 @Transactional
 public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTest {
   @Autowired private RegisterUseCase registerUseCase;
   @Autowired private JdbcTemplate jdbcTemplate;
+  @Autowired private StringRedisTemplate stringRedisTemplate;
 
   private String uniqueEmail(String prefix) {
     return prefix + "-" + UUID.randomUUID() + "@example.com";
@@ -57,10 +59,20 @@ public class RegisterUseCaseFunctionalTest extends AbstractDatabaseContainersTes
             "select count(*) from account where credentials_id = ?", Integer.class, result);
     assertNotNull(count);
     assertEquals(1, count);
+    Integer statusCount =
+        jdbcTemplate.queryForObject(
+            "select count(*) from credentials where credentials_id = ? and status = 'PENDING'",
+            Integer.class,
+            result);
+    assertEquals(1, statusCount);
     String phoneNumber =
         jdbcTemplate.queryForObject(
             "select phone_number from credentials where credentials_id = ?", String.class, result);
     assertEquals(command.phoneNumber(), phoneNumber);
+    assertNotNull(
+        this.stringRedisTemplate.opsForValue().get("verification:email:" + result));
+    assertNotNull(
+        this.stringRedisTemplate.opsForValue().get("verification:sms:" + result));
   }
 
   @Test

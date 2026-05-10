@@ -62,8 +62,11 @@ public class AdminRegistrationController {
   public ResponseEntity<GenericApiResponse<UUID>> register(
       @Valid @RequestBody RegisterRequestDto dto) {
     RegisterCommand command = RegisterRequestMapper.toCommand(dto, RoleName.ADMIN);
-    this.registerUseCase.execute(command);
+    UUID credentialsId = this.registerUseCase.execute(command);
     return ResponseEntity.status(201)
-        .body(new GenericApiResponse<>("Registration completed successfully.", null));
+        .body(
+            new GenericApiResponse<>(
+                "Registration completed successfully. Check your email and SMS to verify your account.",
+                credentialsId));
   }
 }

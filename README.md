@@ -21,6 +21,7 @@ L'API est organisée en modules découplés selon les principes du **Domain-Driv
 
 - **`authentication/`** : Module métier dédié à l'authentification.
 - **`account/`** : Module métier dédié à la création et à la lecture du compte utilisateur.
+- **`notifications/`** : Module technique dédié à l'envoi et à la validation des codes email/SMS.
 - **`shared/`** : Contient les composants partagés (exceptions, types, middlewares, etc.).
 - **`api/`** : Module central, point d'entrée de l'application, qui orchestre les modules métiers.
 
@@ -129,7 +130,8 @@ Les inscriptions sont maintenant séparées par type d'utilisateur :
 - `POST /public/api/v1/authentication/register/pro`
 - `POST /private/api/v1/authentication/register/admin`
 
-Le contrôleur public reste dédié au login, au refresh token et au logout.
+Chaque route de register renvoie désormais l'UUID des `credentials` créés. Cet identifiant sert à vérifier le compte
+après l'inscription.
 
 ### Routes de login
 
@@ -148,13 +150,26 @@ Les routes publiques d'authentification gèrent aussi :
 
 Le module `authentication` stocke maintenant dans `credentials` :
 
-- `status` : état de vie du compte (`ACTIVE`, `SUSPENDED`)
+- `status` : état de vie du compte (`PENDING`, `ACTIVE`, `SUSPENDED`)
 - `phone_number` : numéro utilisé pour la connexion SMS et la vérification
 - `email_verified` : vérification manuelle de l'email
 - `phone_verified` : vérification manuelle du numéro de téléphone
 
-Le login refuse les credentials non actifs. Pour l'instant, la vérification d'email ou de téléphone n'utilise pas de provider externe
-(pas de Mail/SMS gateway). Elle est simulée par des routes admin dédiées, ce qui permet de garder le flux fonctionnel et testable :
+Le login refuse les credentials non actifs. Après l'inscription, les credentials démarrent en `PENDING` et restent inactifs
+tant que l'email et le téléphone n'ont pas été vérifiés.
+
+Le module `notifications` génère des codes de vérification, les stocke temporairement dans le cache Redis/Dragonfly, puis
+les "envoie" via un adaptateur de notification. Le flux public de vérification est le suivant :
+
+- `POST /public/api/v1/authentication/verification/email`
+- `POST /public/api/v1/authentication/verification/phone`
+
+Le corps de requête contient :
+
+- `credentialsId` : UUID retourné par le register
+- `code` : code reçu par email ou SMS
+
+Les routes admin suivantes restent disponibles pour les opérations de modération manuelle :
 
 - `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/activate`
 - `POST /private/api/v1/authentication/admin/credentials/{credentialsId}/suspend`

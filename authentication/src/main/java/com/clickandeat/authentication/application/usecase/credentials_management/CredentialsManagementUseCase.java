@@ -35,6 +35,7 @@ public class CredentialsManagementUseCase implements ICredentialsManagementUseCa
   public void verifyEmail(UUID credentialsId) {
     Credentials credentials = this.findCredentials(credentialsId);
     credentials.verifyEmail();
+    credentials.completeVerificationIfPossible();
     this.credentialsRepository.save(credentials);
   }
 
@@ -42,6 +43,7 @@ public class CredentialsManagementUseCase implements ICredentialsManagementUseCa
   public void verifyPhone(UUID credentialsId) {
     Credentials credentials = this.findCredentials(credentialsId);
     credentials.verifyPhone();
+    credentials.completeVerificationIfPossible();
     this.credentialsRepository.save(credentials);
   }
 

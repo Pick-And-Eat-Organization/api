@@ -11,6 +11,9 @@ import com.clickandeat.shared.account.CreateGenericAccountRequest;
 import com.clickandeat.shared.account.CreateProAccountPort;
 import com.clickandeat.shared.account.CreateProAccountRequest;
 import com.clickandeat.shared.enums.CredentialsStatus;
+import com.clickandeat.shared.verification.SendVerificationCodeRequest;
+import com.clickandeat.shared.verification.VerificationChannel;
+import com.clickandeat.shared.verification.VerificationCodePort;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,16 +28,19 @@ public class RegisterUseCase implements IRegisterUseCase {
   private final IPasswordService passwordService;
   private final CreateGenericAccountPort createGenericAccountPort;
   private final CreateProAccountPort createProAccountPort;
+  private final VerificationCodePort verificationCodePort;
 
   public RegisterUseCase(
       ICredentialsRepository respository,
       IPasswordService service,
       CreateGenericAccountPort createGenericAccountPort,
-      CreateProAccountPort createProAccountPort) {
+      CreateProAccountPort createProAccountPort,
+      VerificationCodePort verificationCodePort) {
     this.credentialsRepository = respository;
     this.passwordService = service;
     this.createGenericAccountPort = createGenericAccountPort;
     this.createProAccountPort = createProAccountPort;
+    this.verificationCodePort = verificationCodePort;
   }
 
   @Override
@@ -65,6 +71,7 @@ public class RegisterUseCase implements IRegisterUseCase {
 
     UUID credentialsId = persistCredentials(credentials);
     this.createGenericAccount(credentialsId, command);
+    this.sendVerificationCodes(credentialsId, command);
     return credentialsId;
   }
 
@@ -77,6 +84,7 @@ public class RegisterUseCase implements IRegisterUseCase {
 
     UUID credentialsId = persistCredentials(credentials);
     this.createProAccount(credentialsId, proAccountRequest);
+    this.sendVerificationCodes(credentialsId, command);
     return credentialsId;
   }
 
@@ -103,7 +111,7 @@ public class RegisterUseCase implements IRegisterUseCase {
         command.role(),
         new Date(),
         null,
-        CredentialsStatus.ACTIVE,
+        CredentialsStatus.PENDING,
         false,
         false);
   }
@@ -129,5 +137,12 @@ public class RegisterUseCase implements IRegisterUseCase {
 
   private void createProAccount(UUID credentialsId, CreateProAccountRequest request) {
     this.createProAccountPort.createProAccount(credentialsId, request);
+  }
+
+  private void sendVerificationCodes(UUID credentialsId, RegisterCommand command) {
+    this.verificationCodePort.sendVerificationCode(
+        new SendVerificationCodeRequest(credentialsId, VerificationChannel.EMAIL, command.email()));
+    this.verificationCodePort.sendVerificationCode(
+        new SendVerificationCodeRequest(credentialsId, VerificationChannel.SMS, command.phoneNumber()));
   }
 }

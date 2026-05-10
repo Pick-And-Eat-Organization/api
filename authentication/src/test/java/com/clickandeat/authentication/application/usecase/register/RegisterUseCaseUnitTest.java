@@ -22,6 +22,7 @@ import com.clickandeat.shared.account.CreateProAccountPort;
 import com.clickandeat.shared.account.CreateProAccountRequest;
 import com.clickandeat.shared.enums.CredentialsStatus;
 import com.clickandeat.shared.enums.RoleName;
+import com.clickandeat.shared.verification.VerificationCodePort;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class RegisterUseCaseUnitTest {
 
   private CreateGenericAccountPort createGenericAccountPort;
   private CreateProAccountPort createProAccountPort;
+  private VerificationCodePort verificationCodePort;
 
   private RegisterCommand getCommand() {
     String dateString = "2025-05-24";
@@ -61,9 +63,14 @@ public class RegisterUseCaseUnitTest {
     this.passwordService = mock(IPasswordService.class);
     this.createGenericAccountPort = mock(CreateGenericAccountPort.class);
     this.createProAccountPort = mock(CreateProAccountPort.class);
+    this.verificationCodePort = mock(VerificationCodePort.class);
     this.registerUseCase =
         new RegisterUseCase(
-            credentialsRepository, passwordService, createGenericAccountPort, createProAccountPort);
+            credentialsRepository,
+            passwordService,
+            createGenericAccountPort,
+            createProAccountPort,
+            verificationCodePort);
   }
 
   @Test
@@ -130,7 +137,8 @@ public class RegisterUseCaseUnitTest {
             org.mockito.ArgumentMatchers.argThat(
                 credentials ->
                     credentials.getEmail().equals(command.email())
-                        && credentials.getPhoneNumber().equals(command.phoneNumber())));
+                        && credentials.getPhoneNumber().equals(command.phoneNumber())
+                        && credentials.getStatus().equals(CredentialsStatus.PENDING)));
     verify(createGenericAccountPort)
         .createGenericAccount(
             eq(
@@ -140,10 +148,22 @@ public class RegisterUseCaseUnitTest {
                     command.lastName(),
                     command.role().name(),
                     command.birthDate())));
+    verify(verificationCodePort)
+        .sendVerificationCode(
+            org.mockito.ArgumentMatchers.argThat(
+                request ->
+                    request.credentialsId().equals(credentialsId)
+                        && request.recipient().equals(command.email())));
+    verify(verificationCodePort)
+        .sendVerificationCode(
+            org.mockito.ArgumentMatchers.argThat(
+                request ->
+                    request.credentialsId().equals(credentialsId)
+                        && request.recipient().equals(command.phoneNumber())));
   }
 
   @Test
-  public void register_shouldCreateActiveCredentialsByDefault() {
+  public void register_shouldCreatePendingCredentialsByDefault() {
     RegisterCommand command = getCommand();
 
     when(credentialsRepository.findByEmail(command.email())).thenReturn(Optional.empty());
@@ -157,7 +177,7 @@ public class RegisterUseCaseUnitTest {
     verify(credentialsRepository).save(captor.capture());
     Credentials savedCredentials = captor.getValue();
 
-    assertEquals(CredentialsStatus.ACTIVE, savedCredentials.getStatus());
+    assertEquals(CredentialsStatus.PENDING, savedCredentials.getStatus());
     assertFalse(savedCredentials.isEmailVerified());
     assertFalse(savedCredentials.isPhoneVerified());
     assertEquals(command.phoneNumber(), savedCredentials.getPhoneNumber());

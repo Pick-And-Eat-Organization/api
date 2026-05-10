@@ -11,7 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
     basePackages = {
       "com.clickandeat.api",
       "com.clickandeat.authentication",
-      "com.clickandeat.account"
+      "com.clickandeat.account",
+      "com.clickandeat.notifications"
     })
 @EnableJpaRepositories(
     basePackages = {

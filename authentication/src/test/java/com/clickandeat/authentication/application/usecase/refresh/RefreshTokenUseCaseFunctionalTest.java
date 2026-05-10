@@ -10,6 +10,8 @@ import com.clickandeat.authentication.application.usecase.login.LoginUseCase;
 import com.clickandeat.authentication.application.usecase.refresh_token.RefreshTokenUseCase;
 import com.clickandeat.authentication.application.usecase.register.RegisterCommand;
 import com.clickandeat.authentication.application.usecase.register.RegisterUseCase;
+import com.clickandeat.authentication.application.usecase.verification.ICredentialsVerificationUseCase;
+import com.clickandeat.authentication.application.usecase.verification.VerifyCredentialsCodeCommand;
 import com.clickandeat.authentication.domain.valueobject.Role;
 import com.clickandeat.authentication.infrastructure.database.AbstractDatabaseContainersTest;
 import com.clickandeat.shared.enums.RoleName;
@@ -18,12 +20,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -34,35 +36,40 @@ public class RefreshTokenUseCaseFunctionalTest extends AbstractDatabaseContainer
 
   @Autowired RegisterUseCase registerUseCase;
 
+  @Autowired ICredentialsVerificationUseCase credentialsVerificationUseCase;
+
   @Autowired RefreshTokenUseCase refreshUseCase;
 
   @Autowired TokenService tokenService;
 
   @Autowired ITokenRepository tokenRepository;
 
+  @Autowired StringRedisTemplate stringRedisTemplate;
+
   TokenPair token;
-
-  private String uniqueEmail() {
-    return "test-refresh-" + UUID.randomUUID() + "@test.com";
-  }
-
-  private String uniquePhoneNumber() {
-    return "+336" + String.format("%08d", ThreadLocalRandom.current().nextInt(0, 100_000_000));
-  }
 
   public TokenPair createCredentials() {
     String dateString = "2025-05-24";
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    String email = "test-refresh-" + UUID.randomUUID() + "@test.com";
     RegisterCommand command =
         new RegisterCommand(
-            uniqueEmail(),
+            email,
             "MotDePasseTest06?",
             "john",
             "doe",
-            uniquePhoneNumber(),
+            "+336" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
             LocalDate.parse(dateString, formatter),
             new Role(RoleName.CONSUMER, null));
-    this.registerUseCase.execute(command);
+    UUID credentialsId = this.registerUseCase.execute(command);
+    String emailCode =
+        this.stringRedisTemplate.opsForValue().get("verification:email:" + credentialsId);
+    String phoneCode =
+        this.stringRedisTemplate.opsForValue().get("verification:sms:" + credentialsId);
+    this.credentialsVerificationUseCase.verifyEmail(
+        new VerifyCredentialsCodeCommand(credentialsId, emailCode));
+    this.credentialsVerificationUseCase.verifyPhone(
+        new VerifyCredentialsCodeCommand(credentialsId, phoneCode));
     return this.loginUseCase.execute(
         new LoginCommand(command.email(), command.password()), RoleName.CONSUMER);
   }
